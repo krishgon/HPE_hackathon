@@ -41,7 +41,7 @@
                 </form>
                 <form class="signup">
                     <div class="field">
-                        <input type="text" placeholder="Username" id="sUsername" required>
+                        <input type="text" placeholder="Name" id="sName" required>
                     </div>
                     <div class="field">
                         <input type="text" placeholder="Email Address" id="sMail" required>
@@ -59,15 +59,13 @@
 </body>
 
 <script type="module">
-    // Import the functions you need from the SDKs you need
+    // Importing the functions from the needed SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-    import { getDatabase } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-database.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
-
-    // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
-    // Your web app's Firebase configuration
+    // Web app's Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyBU1aZZEBtPTnO0isvYeaSlQG8Bx2GqVu8",
         authDomain: "hackathon-9afac.firebaseapp.com",
@@ -77,50 +75,72 @@
         appId: "1:105717120536:web:08b29491ad511ce2048d6d"
     };
 
-    // Initialize Firebase
+    // Initialize Firebase and other features
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    const db = getFirestore();
     const auth = getAuth();
 
-
+    // when the signup button will be clicked
     sButton.addEventListener('click', (e) => {
 
-        console.log("you tried to sign up");
+        // store all the details entered by user in a map variable called userDetails
+        var userDetails = new Map();
+        userDetails.set('email', document.getElementById('sMail').value);
+        userDetails.set('password', document.getElementById('sPass').value);
+        userDetails.set('name', document.getElementById('sName').value);
 
-        var email = document.getElementById('sMail').value;
-        var password = document.getElementById('sPass').value;
-        var username = document.getElementById('sUsername').value;
+        // move ahead and ask the user if he/she is a doctor or a patient by changing body's html
+        document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please tell us what are you: </h1><button id='patient'>Patient</button><button id='doctor'>Doctor</button";
 
-        console.log("your email is " + email + " and your pass is " + password);
+        //if patient
+        document.getElementById("patient").addEventListener('click', () => { signUpUser('patient'); });
+        //if doctor
+        document.getElementById("doctor").addEventListener('click', () => { signUpUser('doctor'); });
 
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                alert('user created!');
-                // ...
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
+        //register the user on firebase authentication and also create a profile for user in firestore
+        function signUpUser(userStatus) {
+            // register the user 
+            createUserWithEmailAndPassword(auth, userDetails.get('email'), userDetails.get('password'))
+                .then(async (userCredential) => {
+                    // after registering
+                    const user = userCredential.user;
+                    var collec = userStatus + "s";
 
-                window.alert(errorMessage);
-                // ..
-            });
+                    // create a document of user in the respective collection including user's basic details 
+                    await setDoc(doc(db, collec, user.uid), {
+                        name: userDetails.get('name'),
+                        email: userDetails.get('email')
+                    });
+
+                    alert('user created!');
+                })
+                .catch((error) => {
+                    // if there's some error in details or any other thing, alert about it to the user
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+
+                    window.alert(errorMessage);
+                });
+        }
+
     });
 
+
+    // when the login button will be clicked
     lButton.addEventListener('click', (e) => {
+        // collect credentials entered by the user
         var email = document.getElementById('lMail').value;
         var password = document.getElementById('lPass').value;
 
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                // Signed in 
+                // alert user that he/she is logged in
                 const user = userCredential.user;
                 alert('User loged in!');
                 // ...
             })
             .catch((error) => {
+                // if there's some error in details or any other thing, alert about it to the user
                 const errorCode = error.code;
                 const errorMessage = error.message;
 
