@@ -61,6 +61,8 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
     import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
+    import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
+
     // https://firebase.google.com/docs/web/setup#available-libraries
 
     // Web app's Firebase configuration
@@ -68,7 +70,7 @@
         apiKey: "AIzaSyBU1aZZEBtPTnO0isvYeaSlQG8Bx2GqVu8",
         authDomain: "hackathon-9afac.firebaseapp.com",
         projectId: "hackathon-9afac",
-        storageBucket: "hackathon-9afac.appspot.com",
+        storageBucket: "gs://hackathon-9afac.appspot.com/",
         messagingSenderId: "105717120536",
         appId: "1:105717120536:web:08b29491ad511ce2048d6d"
     };
@@ -80,6 +82,7 @@
 
     // when the signup button will be clicked
     sButton.addEventListener('click', (e) => {
+        console.log("button click deteceted");
 
         // store all the details entered by user in a map variable called userDetails
         var userDetails = new Map();
@@ -110,7 +113,54 @@
                         email: userDetails.get('email')
                     });
 
-                    alert('user created!');
+                    // when the user is succesfully signed up, ask for his past records
+                    document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your past vaccination records: </h1><h2>Vaccine 1</h2><input type='number' id='ageGiven' placeholder='Age at which it was given'><input type='text' id='disease' placeholder='For what disease the vaccine was provided?'><button id='vaccineSubmit'>Submit</button>";
+
+                    // When the submit button is clicked
+                    document.getElementById("vaccineSubmit").addEventListener('click', async () => {
+                        var vaccineRef = doc(db, collec, user.uid, 'vaccinations', 'vacc1');
+                        await setDoc(vaccineRef, {
+                            ageGiven: document.getElementById('ageGiven').value,
+                            disease: document.getElementById('disease').value
+                        }, { merge: true });
+
+                        // when vaccinations are registered, ask for allergies
+                        document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your allergies: </h1><h2>Allergy 1</h2><input type='text' id='allergyFrom' placeholder='What are you allergic from?'><button id='allergySubmit'>Submit</button>";
+
+                        // When the submit button is clicked
+                        document.getElementById("allergySubmit").addEventListener('click', async () => {
+                            var allergyRef = doc(db, collec, user.uid, 'allergies', 'all1');
+                            await setDoc(allergyRef, {
+                                allergyFrom: document.getElementById('allergyFrom').value
+                            }, { merge: true });
+
+                            // when allergies are registered, ask for pathological reports
+                            document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your pathological reports: </h1><h2>Report 1</h2><input type='file' id='report1' placeholder='What are you allergic from?'><input type='text' placeholder='This report is: ex blood report' id='reportType'><button id='reportSubmit'>Submit</button>";
+
+                            document.getElementById('reportSubmit').addEventListener('click', async () => {
+                                // Get the file by the user in a variable
+                                const file = document.getElementById('report1').files[0];
+
+                                // Get a reference to the storage service, which is used to create references in your storage bucket
+                                const storage = getStorage();
+
+                                // Create a storage reference from our storage service
+                                const reportRef = ref(storage, user.uid + '/rep1/' + file.name);
+
+                                // upload the selected file to cloud storage
+                                uploadBytes(reportRef, file).then(async (snapshot) => {
+                                    console.log('Uploaded a blob or file!');
+
+                                    // register the report type to user profile
+                                    var pathReportRef = doc(db, collec, user.uid, 'pathologicalReports', 'rep1');
+                                    await setDoc(pathReportRef, {
+                                        type: document.getElementById('reportType').value
+                                    }, { merge: true });
+                                    alert("sab hogya bhau");
+                                });
+                            });
+                        });
+                    });
                 })
                 .catch((error) => {
                     // if there's some error in details or any other thing, alert about it to the user
