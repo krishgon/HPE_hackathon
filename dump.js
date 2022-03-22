@@ -1,5 +1,3 @@
-
-
 // after uploading report, proceed to collect prescriptions
 document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your prescriptions: </h1><h2>prescription 1</h2><input type='text' id='presDoctor' placeholder='Given by'><input type='text' placeholder='prescription is for' id='prescFor'><button id='presSubmit'>Submit</button>";
 
@@ -10,3 +8,5 @@ document.getElementById("presSubmit").addEventListener('click', async () => {
         prescFor: document.getElementById('prescFor').value
     }, { merge: true });
 });
+// Idhar vo sara code hai jo abhi temporary kahipe store karna hai. kyuki ye aage kam aasakta hai
+

@@ -110,7 +110,8 @@
                     var collec = userStatus + "s";
 
                     // create a document of user in the respective collection including user's basic details 
-                    await setDoc(doc(db, collec, user.uid), {
+                    var userDocRef = doc(db, collec, user.uid);
+                    await setDoc(userDocRef, {
                         name: userDetails.get('name'),
                         email: userDetails.get('email')
                     });
@@ -118,51 +119,69 @@
                     // when the user is succesfully signed up, show him/her that profile is created and prompt a continue button
                     document.body.innerHTML = "<h1>Your profile is created successfully!</h1><button id='contButton'>Continue</button>";
                     document.getElementById("contButton").addEventListener('click', () => {
-                        // when the user clicks continue, complete his profile by collecting past records
-                        document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your past vaccination records: </h1><h2>Vaccine 1</h2><input type='number' id='ageGiven' placeholder='Age at which it was given'><input type='text' id='disease' placeholder='For what disease the vaccine was provided?'><input type='date' id='dateGiven'><button id='vaccineSubmit'>Submit</button>";
+                        // ask user about the remaining details after continue is clicked
+                        document.body.innerHTML = "</h1>Please enter the following details</h1><input type='date' id='birthDate' placeholder='your birthdate'><input type='number' id='height' placeholder='your height'><input type='number' id='weight' placeholder='your weight'><button id='extraContButton'>Continue</button>"
 
-                        // When the submit button is clicked
-                        document.getElementById("vaccineSubmit").addEventListener('click', async () => {
-                            var vaccineRef = doc(db, collec, user.uid, 'vaccinations', 'vacc1');
-                            await setDoc(vaccineRef, {
-                                ageGiven: document.getElementById('ageGiven').value,
-                                disease: document.getElementById('disease').value,
-                                dateGiven: document.getElementById('dateGiven').value
+                        document.getElementById("extraContButton").addEventListener('click', async () => {
+
+                            var dob = document.getElementById('birthDate').valueAsDate;
+                            console.log(dob);
+                            var userAge = calcAge(dob);
+                            console.log(userAge);
+                            await setDoc(userDocRef, {
+                                dob: dob,
+                                age: userAge,
+                                height: document.getElementById('height').value,
+                                weight: document.getElementById('weight').value
                             }, { merge: true });
 
-                            // when vaccinations are registered, ask for allergies
-                            document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your allergies: </h1><h2>Allergy 1</h2><input type='text' id='allergyFrom' placeholder='What are you allergic from?'><button id='allergySubmit'>Submit</button>";
+
+                            // when the user clicks continue, complete his profile by collecting past records
+                            document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your past vaccination records: </h1><h2>Vaccine 1</h2><input type='number' id='ageGiven' placeholder='Age at which it was given'><input type='text' id='disease' placeholder='For what disease the vaccine was provided?'><input type='date' id='dateGiven'><button id='vaccineSubmit'>Submit</button>";
 
                             // When the submit button is clicked
-                            document.getElementById("allergySubmit").addEventListener('click', async () => {
-                                var allergyRef = doc(db, collec, user.uid, 'allergies', 'all1');
-                                await setDoc(allergyRef, {
-                                    allergyFrom: document.getElementById('allergyFrom').value
+                            document.getElementById("vaccineSubmit").addEventListener('click', async () => {
+                                var vaccineRef = doc(db, collec, user.uid, 'vaccinations', 'vacc1');
+                                await setDoc(vaccineRef, {
+                                    ageGiven: document.getElementById('ageGiven').value,
+                                    disease: document.getElementById('disease').value,
+                                    dateGiven: document.getElementById('dateGiven').value
                                 }, { merge: true });
 
-                                // when allergies are registered, ask for pathological reports
-                                document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your pathological reports: </h1><h2>Report 1</h2><input type='file' id='report1' placeholder='What are you allergic from?'><input type='text' placeholder='This report is: ex blood report' id='reportType'><button id='reportSubmit'>Submit</button>";
+                                // when vaccinations are registered, ask for allergies
+                                document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your allergies: </h1><h2>Allergy 1</h2><input type='text' id='allergyFrom' placeholder='What are you allergic from?'><button id='allergySubmit'>Submit</button>";
 
-                                document.getElementById('reportSubmit').addEventListener('click', async () => {
-                                    // Get the file by the user in a variable
-                                    const file = document.getElementById('report1').files[0];
+                                // When the submit button is clicked
+                                document.getElementById("allergySubmit").addEventListener('click', async () => {
+                                    var allergyRef = doc(db, collec, user.uid, 'allergies', 'all1');
+                                    await setDoc(allergyRef, {
+                                        allergyFrom: document.getElementById('allergyFrom').value
+                                    }, { merge: true });
 
-                                    // Get a reference to the storage service, which is used to create references in your storage bucket
-                                    const storage = getStorage();
+                                    // when allergies are registered, ask for pathological reports
+                                    document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your pathological reports: </h1><h2>Report 1</h2><input type='file' id='report1' placeholder='What are you allergic from?'><input type='text' placeholder='This report is: ex blood report' id='reportType'><button id='reportSubmit'>Submit</button>";
 
-                                    // Create a storage reference from our storage service
-                                    const reportRef = ref(storage, user.uid + '/rep1/' + file.name);
+                                    document.getElementById('reportSubmit').addEventListener('click', async () => {
+                                        // Get the file by the user in a variable
+                                        const file = document.getElementById('report1').files[0];
 
-                                    // upload the selected file to cloud storage
-                                    uploadBytes(reportRef, file).then(async (snapshot) => {
-                                        console.log('Uploaded a blob or file!');
+                                        // Get a reference to the storage service, which is used to create references in your storage bucket
+                                        const storage = getStorage();
 
-                                        // register the report type to user profile
-                                        var pathReportRef = doc(db, collec, user.uid, 'pathologicalReports', 'rep1');
-                                        await setDoc(pathReportRef, {
-                                            type: document.getElementById('reportType').value
-                                        }, { merge: true });
-                                        alert("sab hogya bhau");
+                                        // Create a storage reference from our storage service
+                                        const reportRef = ref(storage, user.uid + '/rep1/' + file.name);
+
+                                        // upload the selected file to cloud storage
+                                        uploadBytes(reportRef, file).then(async (snapshot) => {
+                                            console.log('Uploaded a blob or file!');
+
+                                            // register the report type to user profile
+                                            var pathReportRef = doc(db, collec, user.uid, 'pathologicalReports', 'rep1');
+                                            await setDoc(pathReportRef, {
+                                                type: document.getElementById('reportType').value
+                                            }, { merge: true });
+                                            alert("sab hogya bhau");
+                                        });
                                     });
                                 });
                             });
@@ -202,6 +221,18 @@
                 alert(errorMessage);
             });
     });
+
+    function calcAge(DOB) {
+        var currentDate = new Date();
+
+        // To calculate the time difference of two dates
+        var Difference_In_Time = currentDate.getTime() - DOB.getTime();
+
+        // To calculate the no. of days between two dates
+        var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+        var age = parseInt(Difference_In_Days/365);
+        return age;
+    }
 </script>
 
 </html>
