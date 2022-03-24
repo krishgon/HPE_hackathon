@@ -10,11 +10,23 @@
 
 <body>
     <h1>Welcome to doctors homepage</h1>
-    <h2 id="nameBox"></h2>
-    <h2 id="hospitalBox"></h2>
-    <h2 id="specializationBox"></h2>
-    <h2 id="emailBox"></h2>
+    <div id="userProfile">
+        <h2 id="nameBox"></h2>
+        <h2 id="hospitalBox"></h2>
+        <h2 id="specializationBox"></h2>
+        <h2 id="emailBox"></h2>
+    </div>
+    <div id="profileEdit" style="display: none;">
+        Name:
+        <input type="text" id="nameEdit">
+        Hospital:
+        <input type="text" id="hospitalEdit">
+        Specialization:
+        <input type="text" id="specializationEdit">
+        <button id="submitEditsButton">Submit</button>
+    </div>
     <button id="logoutButton">Logout</button>
+    <button id="editButton">Edit profile</button>
 </body>
 <script type="module" src="./doctorHome.js" defer></script>
 

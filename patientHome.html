@@ -9,12 +9,24 @@
 </head>
 <body>
     <h1>Welcome to patient homepage</h1>
-    <h2 id="nameBox"></h2>
-    <h2 id="ageBox"></h2>
-    <h2 id="emailBox"></h2>
-    <h2 id="heightBox"></h2>
-    <h2 id="weightBox"></h2>
+    <div id="userProfile">
+        <h2 id="nameBox"></h2>
+        <h2 id="ageBox"></h2>
+        <h2 id="emailBox"></h2>
+        <h2 id="heightBox"></h2>
+        <h2 id="weightBox"></h2>
+    </div>
+    <div id="profileEdit" style="display: none;">
+        Name:
+        <input type="text" id="nameEdit">
+        Height:
+        <input type="text" id="heightEdit">
+        Weight:
+        <input type="text" id="weightEdit">
+        <button id="submitEditsButton">Submit</button>
+    </div>
     <button id="logoutButton">Logout</button>
+    <button id="editButton">Edit Profile</button>
 </body>
 <script type="module" src="./patientHome.js" defer></script>
 </html>
