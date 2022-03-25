@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
 import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
-import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
+import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,12 +20,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
+const storage = getStorage();
+var userID;
+
 
 // If the user has not signed in, take him/her to signin page else proceed
 if (localStorage.getItem("uid") == null) {
     window.location.replace("./../index.html");
 } else {
-    var userID = localStorage.getItem("uid");
+    userID = localStorage.getItem("uid");
 
     var recordsList = await getRecords(userID);
     showRecords(recordsList);
@@ -52,7 +55,7 @@ function showRecords(recordsList) {
             switch (record.id.slice(0, 3)) {
                 case "all":
                     collec = "allergies";
-                    showAllergies(record); 
+                    showAllergies(record);
                     break;
                 case "vac":
                     collec = "vaccinations";
@@ -65,9 +68,9 @@ function showRecords(recordsList) {
             }
         });
     });
-} 
+}
 
-function showAllergies(record){
+function showAllergies(record) {
     var allergy = record.data().allergyFrom;
     var list = document.querySelector("#allergiesList");
     var item = document.createElement("li");
@@ -75,7 +78,7 @@ function showAllergies(record){
     list.appendChild(item);
 }
 
-function showVaccinations(record){
+function showVaccinations(record) {
     var list = document.querySelector("#vaccinationsList");
     var item = document.createElement("li");
     var subList = document.createElement("ul");
@@ -84,16 +87,26 @@ function showVaccinations(record){
         var subListItem = document.createElement("li");
         subListItem.appendChild(document.createTextNode(record.data()[property]));
         subList.appendChild(subListItem);
-    }  
+    }
     item.appendChild(subList);
     list.appendChild(item);
 }
 
 
-function showPathologicalReports(record){
+async function showPathologicalReports(record) {
     var type = record.data().type;
+    var fileName = record.data().fileName;
     var list = document.querySelector("#pathologicalReportsList");
     var item = document.createElement("li");
     item.appendChild(document.createTextNode(type));
+    var downButton = document.createElement("button");
+    var folder = record.id;
+
+    var url = await getDownloadURL(ref(storage, userID + '/' + folder + '/' + fileName));
+
+    console.log(url);
+
+    downButton.innerHTML = '<a href="' + url + '" target="_blank" download>Download File</a>';
+    item.appendChild(downButton);
     list.appendChild(item);
 }

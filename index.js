@@ -162,7 +162,8 @@ if (localStorage.getItem("uid") != null) {
                                 // register the report type to user profile
                                 var pathReportRef = doc(db, collec, user.uid, 'pathologicalReports', 'rep1');
                                 await setDoc(pathReportRef, {
-                                    type: document.getElementById('reportType').value
+                                    type: document.getElementById('reportType').value,
+                                    fileName: file.name
                                 }, { merge: true });
 
                                 // since all information is collected, take the user to his profile page
