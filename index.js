@@ -6,25 +6,26 @@ import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs
 
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+// Web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyBU1aZZEBtPTnO0isvYeaSlQG8Bx2GqVu8",
+    authDomain: "hackathon-9afac.firebaseapp.com",
+    projectId: "hackathon-9afac",
+    storageBucket: "gs://hackathon-9afac.appspot.com/",
+    messagingSenderId: "105717120536",
+    appId: "1:105717120536:web:08b29491ad511ce2048d6d"
+};
+
+// Initialize Firebase and other features
+const app = initializeApp(firebaseConfig);
+const db = getFirestore();
+const auth = getAuth();
+
+
 
 if (localStorage.getItem("uid") != null) {
-    window.location.replace("patientHome.html");
+    sendToRespectivePage(localStorage.getItem("uid"));
 } else {
-   // Web app's Firebase configuration
-   const firebaseConfig = {
-        apiKey: "AIzaSyBU1aZZEBtPTnO0isvYeaSlQG8Bx2GqVu8",
-        authDomain: "hackathon-9afac.firebaseapp.com",
-        projectId: "hackathon-9afac",
-        storageBucket: "gs://hackathon-9afac.appspot.com/",
-        messagingSenderId: "105717120536",
-        appId: "1:105717120536:web:08b29491ad511ce2048d6d"
-    };
-
-    // Initialize Firebase and other features
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore();
-    const auth = getAuth();
-
     // when the signup button will be clicked
     sButton.addEventListener('click', (e) => {
         console.log("button click deteceted");
@@ -95,7 +96,7 @@ if (localStorage.getItem("uid") != null) {
 
 
                 // since all information is collected, take the user to his profile page
-                window.location.replace("doctorHome.html");
+                window.location.replace("./doctor/doctorHome.html");
             });
 
         }
@@ -165,7 +166,7 @@ if (localStorage.getItem("uid") != null) {
                                 }, { merge: true });
 
                                 // since all information is collected, take the user to his profile page
-                                window.location.replace("patientHome.html");
+                                window.location.replace("./patient/patientHome.html");
                             });
                         });
                     });
@@ -186,16 +187,10 @@ if (localStorage.getItem("uid") != null) {
             .then(async (userCredential) => {
                 // alert user that he/she is logged in
                 const user = userCredential.user;
-                
+
                 localStorage.setItem("uid", user.uid);
 
-                var patientSnap = await getDoc(doc(db, "patients", user.uid));
-
-                if(patientSnap.exists() == true){
-                    window.location.replace("patientHome.html");
-                }else{
-                    window.location.replace("doctorHome.html");
-                }
+                sendToRespectivePage(user.uid);
             })
             .catch((error) => {
                 // if there's some error in details or any other thing, alert about it to the user
@@ -216,5 +211,15 @@ if (localStorage.getItem("uid") != null) {
         var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
         var age = parseInt(Difference_In_Days / 365);
         return age;
+    }
+}
+
+async function sendToRespectivePage(uid) {
+    var patientSnap = await getDoc(doc(db, "patients", uid));
+
+    if (patientSnap.exists() == true) {
+        window.location.replace("./patient/patientHome.html");
+    } else {
+        window.location.replace("./doctor/doctorHome.html");
     }
 }
