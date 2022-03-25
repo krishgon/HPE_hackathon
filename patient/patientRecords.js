@@ -47,45 +47,53 @@ function showRecords(recordsList) {
     recordsList.forEach(recordType => { // for each type of record (allergy, vaccinations, pathological reports)
         recordType.forEach((record) => { // for each record in it's respective type
             var collec; // the variable which stores which type of record is being iterated
-            var vaccineItem; // variable which stores elements when vaccine is being iterated since a vaccine record has multiple fields
 
-            // detect which type of record is being iterated by examining the first 3 letters of record id
+            // detect which type of record is being iterated by examining the first 3 letters of record id and call their respective ui displayers
             switch (record.id.slice(0, 3)) {
                 case "all":
                     collec = "allergies";
+                    showAllergies(record); 
                     break;
                 case "vac":
                     collec = "vaccinations";
-                    vaccineItem = document.createElement("ul"); // if the record type is vaccine, then create a ul element to be added under the default list
+                    showVaccinations(record);
                     break;
                 case "rep":
                     collec = "pathologicalReports";
+                    showPathologicalReports(record);
                     break;
             }
-
-            // collect data of each record
-            var data = record.data();
-            // collect list under which the data will go
-            var list = document.querySelector("#" + collec + "List");
-
-            // for every property in the data of record, create a li element, fill it with the record data and add this li element to the respective list. Exception for vaccines
-            for (var property in data) {  
-                var toShow = data[property];
-                var item = document.createElement("li");
-
-
-                if (collec == "vaccinations") { // since vaccines have multiple property's create a list inside of the default list listing all the properties of a record and add it to the parent list
-                    var vaccineProp = document.createElement("li");
-                    vaccineProp.appendChild(document.createTextNode(property + ": " + toShow));
-                    vaccineItem.appendChild(vaccineProp); 
-                    item.appendChild(vaccineItem);
-                } else {
-                    item.appendChild(document.createTextNode(toShow));
-                }
-            }
-                
-            // add the created item to the respective record type list
-            list.appendChild(item);
         });
     });
+} 
+
+function showAllergies(record){
+    var allergy = record.data().allergyFrom;
+    var list = document.querySelector("#allergiesList");
+    var item = document.createElement("li");
+    item.appendChild(document.createTextNode(allergy));
+    list.appendChild(item);
+}
+
+function showVaccinations(record){
+    var list = document.querySelector("#vaccinationsList");
+    var item = document.createElement("li");
+    var subList = document.createElement("ul");
+
+    for (var property in record.data()) {
+        var subListItem = document.createElement("li");
+        subListItem.appendChild(document.createTextNode(record.data()[property]));
+        subList.appendChild(subListItem);
+    }  
+    item.appendChild(subList);
+    list.appendChild(item);
+}
+
+
+function showPathologicalReports(record){
+    var type = record.data().type;
+    var list = document.querySelector("#pathologicalReportsList");
+    var item = document.createElement("li");
+    item.appendChild(document.createTextNode(type));
+    list.appendChild(item);
 }
