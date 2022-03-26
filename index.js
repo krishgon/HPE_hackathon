@@ -194,6 +194,7 @@ if (localStorage.getItem("uid") != null) {
 
     // when the login button will be clicked
     lButton.addEventListener('click', (e) => {
+        console.log("log in button clicked");
         // collect credentials entered by the user
         var email = document.getElementById('lMail').value;
         var password = document.getElementById('lPass').value;

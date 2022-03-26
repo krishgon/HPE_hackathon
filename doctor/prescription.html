@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create prescription</title>
+</head>
+<body>
+    <h1>You write the davai here</h1>
+    <div id="patientAuth">
+        <input type="mail" id="patientMail" placeholder="Patient's email">
+        <button id="mailSubmitButton">Submit</button>
+    </div>
+    <div id="OtpDialog" style="display: none;">
+        <div id="otpErrorBox"></div>
+        <input type="text" id="otpBox" placeholder="enter OTP">
+        <button id="submitOTP">Submit</button>
+    </div>
+    <div id="patientDetailsBox" style="display: none">
+        <h2 id="patientName"></h2>
+        <button id="showRecordsButton">Show Records</button>
+    </div>
+    <button><a href="./doctorHome.html">Home</a></button>
+</body>
+<script src="https://smtpjs.com/v3/smtp.js"></script>
+<script type="module" src="./prescription.js" defer></script>
+</html>
