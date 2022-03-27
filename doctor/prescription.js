@@ -1,6 +1,6 @@
 // Importing the functions from the needed SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 import { getAuth, sendSignInLinkToEmail, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
 
@@ -21,12 +21,20 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 const storage = getStorage();
-var patient;
+var patient, doctor = {};
 
 // If the user has not signed in, take him/her to signin page else proceed
 if (localStorage.getItem("uid") == null) {
     window.location.replace("./../index.html");
 } else {
+    var docID = localStorage.getItem("uid");
+    const docSnap = await getDoc(doc(db, "doctors", docID));
+    doctor.name = docSnap.get("name");
+    doctor.hospital = docSnap.get("hospital");
+    console.log(doctor)
+    var med = document.getElementById("med").cloneNode(true);
+    var medBox = document.getElementById("medicinesBox");
+
     // when the submit button is clicked, sign in the patient whose email is entered
     document.getElementById("mailSubmitButton").addEventListener('click', () => {
         var email = document.getElementById("patientMail").value;
@@ -46,7 +54,70 @@ if (localStorage.getItem("uid") == null) {
         document.getElementById("patientDetailsBox").style.display = "block";
         document.getElementById("patientRecords").style.display = "none";
     });
+
+    document.getElementById("submitPrescriptionButton").addEventListener('click', async () => {
+        await uploadPrescription();
+        alert("prescription uploaded");
+    });
+
+    document.getElementById("addMedButton").addEventListener('click', () => {
+        console.log("add button clicked");
+        var medToAdd = med.cloneNode(true);
+        medBox.appendChild(medToAdd);
+        var deleteButton = medToAdd.children[15];
+        deleteButton.addEventListener('click', () => {
+            delteMedicine(deleteButton);
+        });
+    });
+
+    document.getElementById("deleteMed").addEventListener('click', () => {
+        delteMedicine(document.getElementById("deleteMed"));
+    });
+
+
 }
+
+function delteMedicine(deleteButton) {
+    deleteButton.parentElement.outerHTML = "";
+}
+
+async function uploadPrescription() {
+    const batch = writeBatch(db);
+
+    var prescriptionRef = doc(db, 'patients', patient.uid, "prescriptions", 'pres1');
+    batch.set(prescriptionRef, {
+        doctor: doctor.name,
+        hospital: doctor.hospital,
+        prescFor: document.getElementById('prescFor').value,
+        height: document.getElementById('height').value,
+        weight: document.getElementById('weight').value
+    });
+
+    var meds = document.querySelectorAll("#med");
+    for (var i = 0; i < meds.length; i++) {
+        var dailyDose = getDailyDose(meds[i]);
+        var medicineRef = doc(db, 'patients', patient.uid, "prescriptions", "pres1", "medicines", `med${i+1}`);
+        batch.set(medicineRef, {
+            doseDuration: parseInt(meds[i].querySelector("#medDuration").value),
+            name: meds[i].querySelector("#medName").value,
+            dailyDose: dailyDose
+        });
+    }
+
+    await batch.commit();
+}
+
+function getDailyDose(med) {
+    var doseArr = [];
+    var nodes = med.querySelectorAll("input[type='checkbox']");
+    nodes.forEach(node => {
+        if (node.checked) {
+            doseArr.push(node.value);
+        }
+    });
+    return doseArr;
+}
+
 
 
 function signPatientByEmail(email) {
@@ -75,6 +146,7 @@ function signPatientByEmail(email) {
             if (typedOTP == OTP) {
                 otpBox.parentElement.style.display = "none";
                 document.getElementById("patientDetailsBox").style.display = "block";
+                document.getElementById("prescriptionBox").style.display = "block";
                 var q = query(collection(db, "patients"), where("email", "==", email));
                 var querySnapshot = await getDocs(q);
                 querySnapshot.forEach((doc) => {

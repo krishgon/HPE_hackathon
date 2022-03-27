@@ -24,7 +24,7 @@
     <div id="patientDetailsBox" style="display: none">
         <h2 id="patientDetails"></h2>
         <button id="showRecordsButton">Show Records</button>
-        
+
     </div>
 
     <div id="patientRecords" style="display: none;">
@@ -47,7 +47,33 @@
         </div>
         <button id="backButton">back</button>
     </div>
-
+    <br>
+    <div id="prescriptionBox" style=" border: 1px solid grey; padding: 1rem; width: max-content; display: none;">
+        <h2>Prescription:-</h2>
+        <div id="prescriptionEditBox">
+            <input type="text" id="prescFor" placeholder="Disease">
+            <input type="text" id="height" placeholder="height">
+            <input type="text" id="weight" placeholder="weight">
+            <br>
+            <div id="medicinesBox">
+                <div id="med" style="border: 1px dotted black; padding: 0.5rem; margin-top: 1rem;">
+                    <h3><div id="text"> Medicine </div></h3>
+                    <input type="text" id="medName" placeholder="Medicine Name">
+                    <input type="text" id="medDuration" placeholder="No.of days to take"><br></br>
+                    <input type="checkbox" id="day" value="day">
+                    <label>Day</label><br>
+                    <input type="checkbox" id="afternoon" value="afternoon">
+                    <label>Afternoon</label><br>
+                    <input type="checkbox" id="night" value="night">
+                    <label>Night</label><br><br>
+                    <button id="deleteMed" style="float: right; position: relative; bottom: 25px;">🗑️</button>
+                </div>
+            </div><br>
+            <button id="addMedButton">+</button>
+        </div><br>
+        <button id="submitPrescriptionButton">Submit Prescription</button><br>
+    </div>
+    <br><br><br>
     <button><a href="./doctorHome.html">Home</a></button>
 </body>
 <script src="https://smtpjs.com/v3/smtp.js"></script>
