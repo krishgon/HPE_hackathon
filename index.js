@@ -4,11 +4,11 @@ const signInButton = document.getElementById('signIn');
 const container = document.getElementById('container');
 
 signUpButton.addEventListener('click', () => {
-	container.classList.add("right-panel-active");
+    container.classList.add("right-panel-active");
 });
 
 signInButton.addEventListener('click', () => {
-	container.classList.remove("right-panel-active");
+    container.classList.remove("right-panel-active");
 });
 
 
@@ -34,6 +34,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
+var userDetails, user, userDocRef, collec;
 
 
 
@@ -45,152 +46,20 @@ if (localStorage.getItem("uid") != null) {
         console.log("button click deteceted");
 
         // store all the details entered by user in a map variable called userDetails
-        var userDetails = new Map();
+        userDetails = new Map();
         userDetails.set('email', document.getElementById('sMail').value);
         userDetails.set('password', document.getElementById('sPass').value);
         userDetails.set('name', document.getElementById('sName').value);
 
         // move ahead and ask the user if he/she is a doctor or a patient by changing body's html
-        document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please tell us what are you: </h1><button id='patient'>Patient</button><button id='doctor'>Doctor</button";
+        document.getElementById("container").style.display = "none";
+        document.getElementById("userTypeBox").style.display = "block";
 
         //if patient
         document.getElementById("patient").addEventListener('click', () => { signUpUser('patient'); });
         //if doctor
         document.getElementById("doctor").addEventListener('click', () => { signUpUser('doctor'); });
-
-        //register the user on firebase authentication and also create a profile for user in firestore
-
-
-
-        function signUpUser(userStatus) {
-            // register the user 
-            createUserWithEmailAndPassword(auth, userDetails.get('email'), userDetails.get('password'))
-                .then(async (userCredential) => {
-                    // after registering
-                    const user = userCredential.user;
-                    var collec = userStatus + "s";
-
-                    // create a document of user in the respective collection including user's basic details 
-                    var userDocRef = doc(db, collec, user.uid);
-                    await setDoc(userDocRef, {
-                        name: userDetails.get('name'),
-                        email: userDetails.get('email')
-                    });
-
-                    localStorage.setItem("uid", user.uid);
-
-                    // when the user is succesfully signed up, show him/her that profile is created and prompt a continue button
-                    document.body.innerHTML = "<h1>Your profile is created successfully!</h1><button id='contButton'>Continue</button>";
-                    document.getElementById("contButton").addEventListener('click', () => {
-                        if (userStatus == 'patient') {
-                            makePatientProfile(user, userDocRef, collec);
-                        } else {
-                            makeDoctorProfile(user, userDocRef, collec);
-                        }
-                    });
-                })
-                .catch((error) => {
-                    // if there's some error in details or any other thing, alert about it to the user
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-
-                    window.alert(errorMessage);
-                });
-        }
-
-
-        function makeDoctorProfile(user, userDocRef, collec) {
-            // ask user about the remaining details after continue is clicked
-            document.body.innerHTML = "</h1>Please enter the following details</h1><input type='text' id='hospital' placeholder='your hospital'><input type='text' id='specialization' placeholder='your specialization'><button id='extraContButton'>Continue</button>";
-            document.getElementById("extraContButton").addEventListener('click', async () => {
-                await setDoc(userDocRef, {
-                    hospital: document.getElementById('hospital').value,
-                    specialization: document.getElementById('specialization').value
-                }, { merge: true });
-
-
-                // since all information is collected, take the user to his profile page
-                window.location.replace("./doctor/doctorHome.html");
-            });
-
-        }
-
-
-        function makePatientProfile(user, userDocRef, collec) {
-            // ask user about the remaining details after continue is clicked
-            document.body.innerHTML = "</h1>Please enter the following details</h1><input type='date' id='birthDate' placeholder='your birthdate'><input type='number' id='height' placeholder='your height'><input type='number' id='weight' placeholder='your weight'><button id='extraContButton'>Continue</button>";
-
-            document.getElementById("extraContButton").addEventListener('click', async () => {
-
-                var dob = document.getElementById('birthDate').valueAsDate;
-                console.log(dob);
-                var userAge = calcAge(dob);
-                console.log(userAge);
-                await setDoc(userDocRef, {
-                    dob: dob,
-                    age: userAge,
-                    height: document.getElementById('height').value,
-                    weight: document.getElementById('weight').value
-                }, { merge: true });
-
-
-                // when the user clicks continue, complete his profile by collecting past records
-                document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your past vaccination records: </h1><h2>Vaccine 1</h2><input type='number' id='ageGiven' placeholder='Age at which it was given'><input type='text' id='disease' placeholder='For what disease the vaccine was provided?'><input type='date' id='dateGiven'><button id='vaccineSubmit'>Submit</button>";
-
-                // When the submit button is clicked
-                document.getElementById("vaccineSubmit").addEventListener('click', async () => {
-                    var vaccineRef = doc(db, collec, user.uid, 'vaccinations', 'vacc1');
-                    await setDoc(vaccineRef, {
-                        ageGiven: document.getElementById('ageGiven').value,
-                        disease: document.getElementById('disease').value,
-                        dateGiven: document.getElementById('dateGiven').value
-                    }, { merge: true });
-
-                    // when vaccinations are registered, ask for allergies
-                    document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your allergies: </h1><h2>Allergy 1</h2><input type='text' id='allergyFrom' placeholder='What are you allergic from?'><button id='allergySubmit'>Submit</button>";
-
-                    // When the submit button is clicked
-                    document.getElementById("allergySubmit").addEventListener('click', async () => {
-                        var allergyRef = doc(db, collec, user.uid, 'allergies', 'all1');
-                        await setDoc(allergyRef, {
-                            allergyFrom: document.getElementById('allergyFrom').value
-                        }, { merge: true });
-
-                        // when allergies are registered, ask for pathological reports
-                        document.body.innerHTML = "<h1>Hi " + userDetails.get('name') + ", Please submit your pathological reports: </h1><h2>Report 1</h2><input type='file' id='report1' placeholder='What are you allergic from?'><input type='text' placeholder='This report is: ex blood report' id='reportType'><button id='reportSubmit'>Submit</button>";
-
-                        document.getElementById('reportSubmit').addEventListener('click', async () => {
-                            // Get the file by the user in a variable
-                            const file = document.getElementById('report1').files[0];
-
-                            // Get a reference to the storage service, which is used to create references in your storage bucket
-                            const storage = getStorage();
-
-                            // Create a storage reference from our storage service
-                            const reportRef = ref(storage, user.uid + '/rep1/' + file.name);
-
-                            // upload the selected file to cloud storage
-                            uploadBytes(reportRef, file).then(async (snapshot) => {
-                                console.log('Uploaded a blob or file!');
-
-                                // register the report type to user profile
-                                var pathReportRef = doc(db, collec, user.uid, 'pathologicalReports', 'rep1');
-                                await setDoc(pathReportRef, {
-                                    type: document.getElementById('reportType').value,
-                                    fileName: file.name
-                                }, { merge: true });
-
-                                // since all information is collected, take the user to his profile page
-                                window.location.replace("./patient/patientHome.html");
-                            });
-                        });
-                    });
-                });
-            });
-        }
-
     });
-
 
     // when the login button will be clicked
     lButton.addEventListener('click', (e) => {
@@ -217,17 +86,87 @@ if (localStorage.getItem("uid") != null) {
             });
     });
 
-    function calcAge(DOB) {
-        var currentDate = new Date();
+    document.getElementById("patientContinue").addEventListener('click', async () => {
+        var dob = document.getElementById('birthDate').valueAsDate;
+        console.log(dob);
+        var userAge = calcAge(dob);
+        console.log(userAge);
+        await setDoc(userDocRef, {
+            dob: dob,
+            age: userAge,
+            height: document.getElementById('height').value,
+            weight: document.getElementById('weight').value
+        }, { merge: true });
 
-        // To calculate the time difference of two dates
-        var Difference_In_Time = currentDate.getTime() - DOB.getTime();
+        document.getElementById("patientDetails").style.display = "none";
+        document.getElementById("patientVaccinations").style.display = "block";
+    });
 
-        // To calculate the no. of days between two dates
-        var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-        var age = parseInt(Difference_In_Days / 365);
-        return age;
-    }
+    // When the vaccine submit button is clicked
+    document.getElementById("vaccineSubmit").addEventListener('click', async () => {
+        var vaccineRef = doc(db, collec, user.uid, 'vaccinations', 'vacc1');
+        await setDoc(vaccineRef, {
+            ageGiven: document.getElementById('ageGiven').value,
+            disease: document.getElementById('disease').value,
+            dateGiven: document.getElementById('dateGiven').value
+        }, { merge: true });
+
+        document.getElementById("patientVaccinations").style.display = "none";
+        document.getElementById("patientAllergies").style.display = "block";
+    });
+
+    // When the allergies submit button is clicked
+    document.getElementById("allergySubmit").addEventListener('click', async () => {
+        var allergyRef = doc(db, collec, user.uid, 'allergies', 'all1');
+        await setDoc(allergyRef, {
+            allergyFrom: document.getElementById('allergyFrom').value
+        }, { merge: true });
+
+        document.getElementById("patientAllergies").style.display = "none";
+        document.getElementById("patientPathReports").style.display = "block";
+    });
+
+    // when pathological reports submit button is clicked
+    document.getElementById('reportSubmit').addEventListener('click', async () => {
+        // Get the file by the user in a variable
+        const file = document.getElementById('report1').files[0];
+
+        // Get a reference to the storage service, which is used to create references in your storage bucket
+        const storage = getStorage();
+
+        // Create a storage reference from our storage service
+        const reportRef = ref(storage, user.uid + '/rep1/' + file.name);
+
+        // upload the selected file to cloud storage
+        uploadBytes(reportRef, file).then(async (snapshot) => {
+            console.log('Uploaded a blob or file!');
+
+            // register the report type to user profile
+            var pathReportRef = doc(db, collec, user.uid, 'pathologicalReports', 'rep1');
+            await setDoc(pathReportRef, {
+                type: document.getElementById('reportType').value,
+                fileName: file.name
+            }, { merge: true });
+
+            // since all information is collected, take the user to his profile page
+            window.location.replace("./patient/patientHome.html");
+        });
+    });
+
+
+}
+
+
+function calcAge(DOB) {
+    var currentDate = new Date();
+
+    // To calculate the time difference of two dates
+    var Difference_In_Time = currentDate.getTime() - DOB.getTime();
+
+    // To calculate the no. of days between two dates
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    var age = parseInt(Difference_In_Days / 365);
+    return age;
 }
 
 async function sendToRespectivePage(uid) {
@@ -238,4 +177,67 @@ async function sendToRespectivePage(uid) {
     } else {
         window.location.replace("./doctor/doctorHome.html");
     }
+}
+
+
+function signUpUser(userStatus) {
+    // register the user 
+    createUserWithEmailAndPassword(auth, userDetails.get('email'), userDetails.get('password'))
+        .then(async (userCredential) => {
+            // after registering
+            user = userCredential.user;
+            collec = userStatus + "s";
+
+            // create a document of user in the respective collection including user's basic details 
+            userDocRef = doc(db, collec, user.uid);
+            await setDoc(userDocRef, {
+                name: userDetails.get('name'),
+                email: userDetails.get('email')
+            });
+
+            localStorage.setItem("uid", user.uid);
+
+            // when the user is succesfully signed up, show him/her that profile is created and prompt a continue button
+            document.getElementById("userTypeBox").style.display = "none";
+            document.getElementById("successfullyCreated").style.display = "block";
+            document.getElementById("contButton").addEventListener('click', () => {
+                if (userStatus == 'patient') {
+                    makePatientProfile();
+                } else {
+                    makeDoctorProfile();
+                }
+            });
+        })
+        .catch((error) => {
+            // if there's some error in details or any other thing, alert about it to the user
+            const errorCode = error.code;
+            const errorMessage = error.message;
+
+            window.alert(errorMessage);
+        });
+}
+
+
+function makeDoctorProfile() {
+    // ask user about the remaining details after continue is clicked
+    document.getElementById("successfullyCreated").style.display = "none";
+    document.getElementById("doctorDetails").style.display = "block";
+    document.getElementById("doctorContinue").addEventListener('click', async () => {
+        await setDoc(userDocRef, {
+            hospital: document.getElementById('hospital').value,
+            specialization: document.getElementById('specialization').value
+        }, { merge: true });
+
+
+        // since all information is collected, take the user to his profile page
+        window.location.replace("./doctor/doctorHome.html");
+    });
+
+}
+
+
+function makePatientProfile() {
+    // ask user about the remaining details after continue is clicked
+    document.getElementById("successfullyCreated").style.display = "none";
+    document.getElementById("patientDetails").style.display = "block";
 }
