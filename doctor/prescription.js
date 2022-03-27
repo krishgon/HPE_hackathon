@@ -58,6 +58,7 @@ if (localStorage.getItem("uid") == null) {
     document.getElementById("submitPrescriptionButton").addEventListener('click', async () => {
         await uploadPrescription();
         alert("prescription uploaded");
+        window.location.reload();
     });
 
     document.getElementById("addMedButton").addEventListener('click', () => {
@@ -74,6 +75,7 @@ if (localStorage.getItem("uid") == null) {
         delteMedicine(document.getElementById("deleteMed"));
     });
 
+    
 
 }
 
@@ -84,7 +86,10 @@ function delteMedicine(deleteButton) {
 async function uploadPrescription() {
     const batch = writeBatch(db);
 
-    var prescriptionRef = doc(db, 'patients', patient.uid, "prescriptions", 'pres1');
+    var presSnapshot = await getDocs(collection(db, 'patients', patient.uid, "prescriptions"));
+    var prescriptionIndex = presSnapshot.docs.length + 1;
+
+    var prescriptionRef = doc(db, 'patients', patient.uid, "prescriptions", `pres${prescriptionIndex}`);
     batch.set(prescriptionRef, {
         doctor: doctor.name,
         hospital: doctor.hospital,
@@ -96,9 +101,9 @@ async function uploadPrescription() {
     var meds = document.querySelectorAll("#med");
     for (var i = 0; i < meds.length; i++) {
         var dailyDose = getDailyDose(meds[i]);
-        var medicineRef = doc(db, 'patients', patient.uid, "prescriptions", "pres1", "medicines", `med${i+1}`);
+        var medicineRef = doc(db, 'patients', patient.uid, "prescriptions", `pres${prescriptionIndex}`, "medicines", `med${i+1}`);
         batch.set(medicineRef, {
-            doseDuration: parseInt(meds[i].querySelector("#medDuration").value),
+            doseDuration: meds[i].querySelector("#medDuration").value,
             name: meds[i].querySelector("#medName").value,
             dailyDose: dailyDose
         });
