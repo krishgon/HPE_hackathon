@@ -14,7 +14,7 @@ signInButton.addEventListener('click', () => {
 
 // Importing the functions from the needed SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
 import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
 
@@ -35,7 +35,12 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 var userDetails, user, userDocRef, collec;
-
+var vaccToAdd = document.getElementById('vaccineInput').cloneNode(true);
+var vaccBox = document.getElementById("vaccines");
+var allToAdd = document.getElementById('allergyInput').cloneNode(true);
+var allBox = document.getElementById("allergies");
+var repToAdd = document.getElementById("reportInput").cloneNode(true);
+var repBox = document.getElementById("reports");
 
 
 if (localStorage.getItem("uid") != null) {
@@ -102,14 +107,22 @@ if (localStorage.getItem("uid") != null) {
         document.getElementById("patientVaccinations").style.display = "block";
     });
 
+    // add and delete of ALLERGIES
+    document.getElementById("addAllergyButton").addEventListener('click', () => { addItem(allToAdd, allBox, 1); });
+    document.getElementById("deleteAllButton").addEventListener('click', () => { deleteBox(document.getElementById("deleteAllButton")); });
+
+    // add and delete of VACCINES
+    document.getElementById("addVaccineButton").addEventListener('click', () => { addItem(vaccToAdd, vaccBox, 3) });
+    document.getElementById("deleteVaccButton").addEventListener('click', () => { deleteBox(document.getElementById("deleteVaccButton")); });
+
+    // add and delete of PATHOLOGICAL REPORTS
+    document.getElementById("addReportButton").addEventListener('click', () => { addItem(repToAdd, repBox, 2); });
+    document.getElementById("deleteReportButton").addEventListener('click', () => { deleteBox(document.getElementById("deleteReportButton")); });
+
+
     // When the vaccine submit button is clicked
     document.getElementById("vaccineSubmit").addEventListener('click', async () => {
-        var vaccineRef = doc(db, collec, user.uid, 'vaccinations', 'vacc1');
-        await setDoc(vaccineRef, {
-            ageGiven: document.getElementById('ageGiven').value,
-            disease: document.getElementById('disease').value,
-            dateGiven: document.getElementById('dateGiven').value
-        }, { merge: true });
+        await uploadVaccines();
 
         document.getElementById("patientVaccinations").style.display = "none";
         document.getElementById("patientAllergies").style.display = "block";
@@ -117,10 +130,7 @@ if (localStorage.getItem("uid") != null) {
 
     // When the allergies submit button is clicked
     document.getElementById("allergySubmit").addEventListener('click', async () => {
-        var allergyRef = doc(db, collec, user.uid, 'allergies', 'all1');
-        await setDoc(allergyRef, {
-            allergyFrom: document.getElementById('allergyFrom').value
-        }, { merge: true });
+        await uploadAllergies();
 
         document.getElementById("patientAllergies").style.display = "none";
         document.getElementById("patientPathReports").style.display = "block";
@@ -154,6 +164,19 @@ if (localStorage.getItem("uid") != null) {
     });
 
 
+}
+
+function addItem(toAdd, parentBox, deleteIndex) {
+    var item = toAdd.cloneNode(true);
+    parentBox.appendChild(item);
+    var deleteButton = item.children[deleteIndex];
+    deleteButton.addEventListener('click', () => {
+        deleteBox(deleteButton);
+    });
+}
+
+function deleteBox(delButton) {
+    delButton.parentElement.outerHTML = "";
 }
 
 
@@ -232,7 +255,6 @@ function makeDoctorProfile() {
         // since all information is collected, take the user to his profile page
         window.location.replace("./doctor/doctorHome.html");
     });
-
 }
 
 
@@ -240,4 +262,34 @@ function makePatientProfile() {
     // ask user about the remaining details after continue is clicked
     document.getElementById("successfullyCreated").style.display = "none";
     document.getElementById("patientDetails").style.display = "block";
+}
+
+async function uploadVaccines(){
+    const batch = writeBatch(db);
+
+    var vaccs = document.querySelectorAll("#vaccineInput");
+    for (var i = 0; i < vaccs.length; i++) {
+        var vaccRef = doc(db, 'patients', user.uid, "vaccinations", `vacc${i+1}`);
+        batch.set(vaccRef, {
+            ageGiven: vaccs[i].querySelector("#ageGiven").value,
+            disease: vaccs[i].querySelector("#disease").value,
+            dateGiven: vaccs[i].querySelector("#dateGiven").value
+        });
+    }
+
+    await batch.commit();
+}
+
+async function uploadAllergies(){
+    const batch = writeBatch(db);
+
+    var alls = document.querySelectorAll("#allergyInput");
+    for (var i = 0; i < alls.length; i++) {
+        var allRef = doc(db, 'patients', user.uid, "allergies", `all${i+1}`);
+        batch.set(allRef, {
+            allergyFrom: alls[i].querySelector("#allergyFrom").value
+        });
+    }
+
+    await batch.commit();
 }

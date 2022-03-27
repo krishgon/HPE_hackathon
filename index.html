@@ -12,7 +12,7 @@
 
 <body>
 
-	<div class="container" id="container">
+	<div class="container" id="container" style="display: block">
 		<div class="form-container sign-up-container">
 			<form action="#">
 
@@ -76,10 +76,11 @@
 	<div id="patientVaccinations" style="display: none;">
 		<h1>Hi, Please submit your past vaccination records: </h1>
 		<div id='vaccines'>
-			<div id='vaccineInput'>
+			<div id='vaccineInput' style="border: 1px solid black; padding: 1rem;">
 				<input type='number' id='ageGiven' placeholder='Age at which it was given'>
 				<input type='text' id='disease' placeholder='For what disease the vaccine was provided?'>
 				<input type='date' id='dateGiven'>
+				<button id="deleteVaccButton">🗑️</button>
 			</div>
 		</div>
 		<button id='addVaccineButton'>+</button>
@@ -87,15 +88,25 @@
 	</div>
 	<div id="patientAllergies" style="display: none;">
 		<h1>Hi, Please submit your allergies: </h1>
-		<h2>Allergy 1</h2>
-		<input type='text' id='allergyFrom' placeholder='What are you allergic from?'>
+		<div id="allergies">
+			<div id="allergyInput" style="border: 1px solid black; padding: 1rem; display: flex;">
+				<input type='text' id='allergyFrom' placeholder='What are you allergic from?'>
+				<button id="deleteAllButton">🗑️</button>
+			</div>
+		</div>
+		<button id="addAllergyButton">+</button>
 		<button id='allergySubmit'>Submit</button>
 	</div>
 	<div id="patientPathReports" style="display: none;">
 		<h1>Hi, Please submit your pathological reports: </h1>
-		<h2>Report 1</h2>
-		<input type='file' id='report1' placeholder='What are you allergic from?'>
-		<input type='text' placeholder='This report is: ex blood report' id='reportType'>
+		<div id="reports">
+			<div id="reportInput" style="display: flex; gap: 5px; border: 1px solid black; padding: 0.5rem;">
+				<input type='file' id='report1' placeholder='What are you allergic from?'>
+				<input type='text' placeholder='This report is: ex blood report' id='reportType'>
+				<button id="deleteReportButton">🗑️</button>
+			</div>
+		</div><br>
+		<button id="addReportButton">+</button>
 		<button id='reportSubmit'>Submit</button>
 	</div>
 </body>
