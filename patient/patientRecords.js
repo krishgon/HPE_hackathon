@@ -41,9 +41,8 @@ async function getRecords(uid) {
     const allergiesSnapshot = await getDocs(collection(db, "patients", uid, "allergies"));
     const vaccinationsSnapshot = await getDocs(collection(db, "patients", uid, "vaccinations"));
     const pathologicalReportsSnapshot = await getDocs(collection(db, "patients", uid, "pathologicalReports"));
-    const prescriptionsSnapshot = await getDocs(collection(db, "patients", uid, "prescriptions"));
 
-    return [allergiesSnapshot, vaccinationsSnapshot, pathologicalReportsSnapshot, prescriptionsSnapshot];
+    return [allergiesSnapshot, vaccinationsSnapshot, pathologicalReportsSnapshot];
 }
 
 // show the retrieved records in the website
@@ -66,9 +65,6 @@ function showRecords(recordsList) {
                     collec = "pathologicalReports";
                     showPathologicalReports(record);
                     break;
-                case "pre":
-                    collec = "prescriptions";
-                    showPrescriptions(record);
             }
         });
     });
@@ -115,31 +111,3 @@ async function showPathologicalReports(record) {
     list.appendChild(item);
 }
 
-async function showPrescriptions(record){
-    var list = document.getElementById("prescriptionsList");
-    var item = document.createElement("div");
-    item.style.border = "1px solid grey";
-    item.style.padding = "1rem";
-    item.style.width = "max-content";
-    item.innerHTML = `<h4 id='prescriptionDetails'>Disease: ${record.data().prescFor}<br>Height: ${record.data().height}<br>Weight: ${record.data().weight}<br>Doctor: ${record.data().doctor}</h4><h4>Medicines:-</h4>`;
-    // getMedTable(record);
-    var medTable = await getMedTable(record);
-    item.appendChild(medTable);
-    list.appendChild(item);
-}
-
-async function getMedTable(record){
-    var table = document.createElement("table");
-    table.innerHTML = "<tr><th>Name</th><th>Daily</th><th>Duration</th></tr>";
-    
-    const medicinesSnapshot = await getDocs(collection(db, "patients", userID, "prescriptions", record.id, "medicines"));
- 
-    medicinesSnapshot.forEach(medicine => {
-        var medItem = document.createElement("tr");
-        console.log(medicine.data());
-        medItem.innerHTML = `<td>${medicine.data().name}</td><td>${medicine.data().dailyDose}</td><td>${medicine.data().doseDuration} days</td>`;
-        table.appendChild(medItem);
-    });
-
-    return table;
-}
