@@ -22,6 +22,15 @@ const db = getFirestore();
 const auth = getAuth();
 const storage = getStorage();
 var patient, doctor = {};
+const monthsToShow = [
+    'October',
+    'November',
+    'December',
+    'January',
+    'February',
+    'March',
+];
+
 
 // If the user has not signed in, take him/her to signin page else proceed
 if (localStorage.getItem("uid") == null) {
@@ -55,7 +64,7 @@ if (localStorage.getItem("uid") == null) {
             document.getElementById("patientDetailsBox").style.display = "block";
             document.getElementById("patientRecords").style.display = "none";
             document.getElementById("patientPrescriptions").style.display = "none";
-        });    
+        });
     });
 
     document.getElementById("submitPrescriptionButton").addEventListener('click', async () => {
@@ -88,7 +97,7 @@ if (localStorage.getItem("uid") == null) {
 }
 
 
-async function showPrescriptions(){
+async function showPrescriptions() {
     const prescriptionsSnapshot = await getDocs(collection(db, "patients", patient.uid, "prescriptions"));
     prescriptionsSnapshot.forEach(async (prescription) => {
         var list = document.getElementById("prescriptionsList");
@@ -103,12 +112,12 @@ async function showPrescriptions(){
     });
 }
 
-async function getMedTable(record){
+async function getMedTable(record) {
     var table = document.createElement("table");
     table.innerHTML = "<tr><th>Name</th><th>Daily</th><th>Duration</th></tr>";
-    
+
     const medicinesSnapshot = await getDocs(collection(db, "patients", patient.uid, "prescriptions", record.id, "medicines"));
- 
+
     medicinesSnapshot.forEach(medicine => {
         var medItem = document.createElement("tr");
         console.log(medicine.data());
@@ -142,7 +151,7 @@ async function uploadPrescription() {
     var meds = document.querySelectorAll("#med");
     for (var i = 0; i < meds.length; i++) {
         var dailyDose = getDailyDose(meds[i]);
-        var medicineRef = doc(db, 'patients', patient.uid, "prescriptions", `pres${prescriptionIndex}`, "medicines", `med${i+1}`);
+        var medicineRef = doc(db, 'patients', patient.uid, "prescriptions", `pres${prescriptionIndex}`, "medicines", `med${i + 1}`);
         batch.set(medicineRef, {
             doseDuration: meds[i].querySelector("#medDuration").value,
             name: meds[i].querySelector("#medName").value,
@@ -203,6 +212,7 @@ function signPatientByEmail(email) {
 
                 document.getElementById("patientDetails").innerHTML = `Patient Name: ${patient.name} <br> Patient age: ${patient.age} <br> Patient Height: ${patient.height} <br> Patient weight: ${patient.weight} <br>`;
                 showCurrentMeds();
+                await makeChart();
             } else {
                 document.getElementById("otpErrorBox").innerHTML = "Correct OTP please";
             }
@@ -223,7 +233,7 @@ async function showCurrentMeds() {
         medsSnapshot.forEach((med) => {
             console.log(med.data().name);
             var duration = med.data().doseDuration;
-            if(duration >= days){
+            if (duration >= days) {
                 var item = document.createElement("li");
                 item.innerHTML = `${med.data().name} for ${pres.data().prescFor}`;
                 list.appendChild(item);
@@ -323,4 +333,85 @@ async function showPathologicalReports(record) {
     downButton.innerHTML = '<a href="' + url + '" target="_blank" download>Download File</a>';
     item.appendChild(downButton);
     list.appendChild(item);
+}
+
+async function makeChartData() {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var presProgress = new Map();
+
+    const presSnapshot = await getDocs(collection(db, "patients", patient.uid, "prescriptions"));
+    presSnapshot.forEach(async (pres) => {
+        var presDate = pres.data().prescDate.toDate();
+        var month = months[presDate.getMonth()];
+        var height = pres.data().height;
+        var weight = pres.data().weight;
+        presProgress.set(month, [height, weight]);
+    });
+    return presProgress;
+}
+
+async function makeChart() {
+    var presProgress = await makeChartData();
+    var heights = [];
+    var weights = [];
+    monthsToShow.forEach(month => {
+        heights.push(presProgress.get(month)[0]);
+        weights.push(presProgress.get(month)[1]);
+    });
+    console.log(heights);
+    console.log(weights);
+
+    drawHeightChart(heights);
+    drawWeightChart(weights);
+}
+
+
+function drawHeightChart(heights) {
+    const labels = monthsToShow;
+
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Height(cm)',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: heights,
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {}
+    };
+
+    const myChart = new Chart(
+        document.getElementById('heightChart'),
+        config
+    );
+}
+
+function drawWeightChart(weights) {
+    const labels = monthsToShow;
+
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Weights(Kg)',
+            backgroundColor: 'rgb(0, 0, 0)',
+            borderColor: 'rgb(0, 0, 0)',
+            data: weights,
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {}
+    };
+
+    const myChart = new Chart(
+        document.getElementById('weightChart'),
+        config
+    );
 }

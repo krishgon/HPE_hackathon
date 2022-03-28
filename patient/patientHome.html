@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
 </head>
+
 <body>
     <h1>Welcome to patient homepage</h1>
     <div id="userProfile">
@@ -18,8 +19,10 @@
         <h2>Running Medications:-</h2>
         <ol id="currentMeds">
         </ol>
-        <canvas id="heightChart" style="max-width:700px; max-height:400px"></canvas>
-        <canvas id="weightChart" style="max-width:700px; max-height:400px"></canvas>
+        <div id="charts" style="display: flex;">
+            <canvas id="heightChart" style="max-width:400px; max-height:400px"></canvas>
+            <canvas id="weightChart" style="max-width:400px; max-height:400px"></canvas>
+        </div>
     </div>
     <div id="profileEdit" style="display: none;">
         Name:
@@ -37,4 +40,5 @@
 </body>
 <script type="module" src="./patientHome.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </html>

@@ -43,6 +43,10 @@
         <h2 id="patientDetails"></h2>
         <h2>Running Medications:-</h2>
         <ol id="currentMeds"></ol>
+        <div id="charts" style="display: flex;">
+            <canvas id="heightChart" style="max-width:400px; max-height:400px"></canvas>
+            <canvas id="weightChart" style="max-width:400px; max-height:400px"></canvas>
+        </div>
         <button id="showRecordsButton">Show Records</button>
         <button id="showPrescriptionsButton">Show Prescriptions</button>
     </div>
@@ -102,6 +106,7 @@
     <br><br><br>
     <button><a href="./doctorHome.html">Home</a></button>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://smtpjs.com/v3/smtp.js"></script>
 <script type="module" src="./prescription.js" defer></script>
 

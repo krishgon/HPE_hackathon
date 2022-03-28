@@ -71,7 +71,7 @@ button.ghost {
 	border-color: #FFFFFF;
 }
 
-form {
+.form-container {
 	background-color: #FFFFFF;
 	display: flex;
 	align-items: center;
@@ -213,7 +213,7 @@ input {
 }
 
 @media screen and (max-width:800px){
-    form{
+    .form-container{
         flex-direction: row;
     }
 }
