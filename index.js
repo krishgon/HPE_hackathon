@@ -138,29 +138,11 @@ if (localStorage.getItem("uid") != null) {
 
     // when pathological reports submit button is clicked
     document.getElementById('reportSubmit').addEventListener('click', async () => {
-        // Get the file by the user in a variable
-        const file = document.getElementById('report1').files[0];
+        await uploadPathReports();
 
-        // Get a reference to the storage service, which is used to create references in your storage bucket
-        const storage = getStorage();
+        // since all information is collected, take the user to his profile page
+        window.location.replace("./patient/patientHome.html");
 
-        // Create a storage reference from our storage service
-        const reportRef = ref(storage, user.uid + '/rep1/' + file.name);
-
-        // upload the selected file to cloud storage
-        uploadBytes(reportRef, file).then(async (snapshot) => {
-            console.log('Uploaded a blob or file!');
-
-            // register the report type to user profile
-            var pathReportRef = doc(db, collec, user.uid, 'pathologicalReports', 'rep1');
-            await setDoc(pathReportRef, {
-                type: document.getElementById('reportType').value,
-                fileName: file.name
-            }, { merge: true });
-
-            // since all information is collected, take the user to his profile page
-            window.location.replace("./patient/patientHome.html");
-        });
     });
 
 
@@ -264,12 +246,12 @@ function makePatientProfile() {
     document.getElementById("patientDetails").style.display = "block";
 }
 
-async function uploadVaccines(){
+async function uploadVaccines() {
     const batch = writeBatch(db);
 
     var vaccs = document.querySelectorAll("#vaccineInput");
     for (var i = 0; i < vaccs.length; i++) {
-        var vaccRef = doc(db, 'patients', user.uid, "vaccinations", `vacc${i+1}`);
+        var vaccRef = doc(db, 'patients', user.uid, "vaccinations", `vacc${i + 1}`);
         batch.set(vaccRef, {
             ageGiven: vaccs[i].querySelector("#ageGiven").value,
             disease: vaccs[i].querySelector("#disease").value,
@@ -280,16 +262,41 @@ async function uploadVaccines(){
     await batch.commit();
 }
 
-async function uploadAllergies(){
+async function uploadAllergies() {
     const batch = writeBatch(db);
 
     var alls = document.querySelectorAll("#allergyInput");
     for (var i = 0; i < alls.length; i++) {
-        var allRef = doc(db, 'patients', user.uid, "allergies", `all${i+1}`);
+        var allRef = doc(db, 'patients', user.uid, "allergies", `all${i + 1}`);
         batch.set(allRef, {
             allergyFrom: alls[i].querySelector("#allergyFrom").value
         });
     }
 
     await batch.commit();
+}
+
+async function uploadPathReports() {
+    var reps = document.querySelectorAll("#reportInput");
+    for (var i = 0; i < reps.length; i++) {
+        // Get the file by the user in a variable
+        const file = reps[i].querySelector('#reportFiles').files[0];
+
+        // Get a reference to the storage service, which is used to create references in your storage bucket
+        const storage = getStorage();
+
+        // Create a storage reference from our storage service
+        const reportRef = ref(storage, user.uid + `/rep${i+1}/` + file.name);
+
+        // upload the selected file to cloud storage
+        await uploadBytes(reportRef, file);
+        console.log('Uploaded a blob or file!');
+
+        // register the report type to user profile
+        var pathReportRef = doc(db, "patients", user.uid, 'pathologicalReports', `rep${i+1}`);
+        await setDoc(pathReportRef, {
+            type: reps[i].querySelector('#reportType').value,
+            fileName: file.name
+        }, { merge: true });
+    }
 }
