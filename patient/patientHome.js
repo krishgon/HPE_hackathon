@@ -1,6 +1,6 @@
 // Importing the functions from the needed SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
 import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
 
@@ -45,6 +45,9 @@ if (localStorage.getItem("uid") == null) {
         }
     }
 
+    showCurrentMeds();
+
+
     // open the edit interface when edit button is clicked
     document.getElementById("editButton").addEventListener('click', () => {
         document.getElementById("userProfile").style.display = "none";
@@ -65,6 +68,35 @@ if (localStorage.getItem("uid") == null) {
     });
 }
 
+async function showCurrentMeds() {
+    var list = document.getElementById("currentMeds");
+    const presSnapshot = await getDocs(collection(db, "patients", userID, "prescriptions"));
+    presSnapshot.forEach(async (pres) => {
+        var presDate = pres.data().prescDate.toDate();
+        var days = parseInt(calcDaysDiff(presDate));
+        console.log(days);
+        var medsSnapshot = await getDocs(collection(db, "patients", userID, "prescriptions", pres.id, "medicines"));
+        medsSnapshot.forEach((med) => {
+            console.log(med.data().name);
+            var duration = med.data().doseDuration;
+            if(duration >= days){
+                var item = document.createElement("li");
+                item.innerHTML = `${med.data().name} for ${pres.data().prescFor}`;
+                list.appendChild(item);
+            }
+        });
+    });
 
+    console.log(runningMeds);
+}
 
+function calcDaysDiff(fromDate) {
+    var currDate = new Date();
 
+    // To calculate the time difference of two dates
+    var Difference_In_Time = currDate.getTime() - fromDate.getTime();
+
+    // To calculate the no. of days between two dates
+    var difference = Difference_In_Time / (1000 * 3600 * 24);
+    return difference;
+}

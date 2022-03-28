@@ -88,14 +88,15 @@ async function uploadPrescription() {
 
     var presSnapshot = await getDocs(collection(db, 'patients', patient.uid, "prescriptions"));
     var prescriptionIndex = presSnapshot.docs.length + 1;
-
+    var prescDate = new Date();
     var prescriptionRef = doc(db, 'patients', patient.uid, "prescriptions", `pres${prescriptionIndex}`);
     batch.set(prescriptionRef, {
         doctor: doctor.name,
         hospital: doctor.hospital,
         prescFor: document.getElementById('prescFor').value,
         height: document.getElementById('height').value,
-        weight: document.getElementById('weight').value
+        weight: document.getElementById('weight').value,
+        prescDate: prescDate
     });
 
     var meds = document.querySelectorAll("#med");
