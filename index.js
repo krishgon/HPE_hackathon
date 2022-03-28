@@ -113,7 +113,7 @@ if (localStorage.getItem("uid") != null) {
     document.getElementById("deleteAllButton").addEventListener('click', () => { deleteBox(document.getElementById("deleteAllButton")); });
 
     // add and delete of VACCINES
-    document.getElementById("addVaccineButton").addEventListener('click', () => { addItem(vaccToAdd, vaccBox, 3) });
+    document.getElementById("addVaccineButton").addEventListener('click', () => { addItem(vaccToAdd, vaccBox, 2) });
     document.getElementById("deleteVaccButton").addEventListener('click', () => { deleteBox(document.getElementById("deleteVaccButton")); });
 
     // add and delete of PATHOLOGICAL REPORTS
