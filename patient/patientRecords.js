@@ -1,6 +1,6 @@
 // Importing the functions from the needed SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getFirestore, doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDocs, collection, getDoc } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
 
@@ -50,6 +50,16 @@ if (localStorage.getItem("uid") == null) {
 
 }
 
+function calcAge(DOB, refDate) {
+    // To calculate the time difference of two dates
+    var Difference_In_Time = refDate.getTime() - (DOB.seconds*1000);
+
+    // To calculate the no. of days between two dates
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    var age = parseInt(Difference_In_Days / 365);
+    return age;
+}
+
 async function registerRecord(recordType) {
     switch (recordType) {
         case 'allergy':
@@ -64,7 +74,13 @@ async function registerRecord(recordType) {
             var vaccSnapshot = await getDocs(collection(db, 'patients', userID, "vaccinations"));
             var vaccineIndex = vaccSnapshot.docs.length + 1;
             var vaccRef = doc(db, 'patients', userID, "vaccinations", `vacc${vaccineIndex}`);
+            var dateGiven = document.getElementById("dateGiven").valueAsDate;
+            const patientSnap = await getDoc(doc(db, "patients", userID));
+            var dob = patientSnap.get("dob");
+            console.log(dob);
+            var ageGiven = calcAge(dob, dateGiven); 
             await setDoc(vaccRef, {
+                ageGiven:  ageGiven,
                 dateGiven: document.getElementById("dateGiven").value,
                 disease: document.getElementById("disease").value
             }, { merge: true });

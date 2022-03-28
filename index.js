@@ -41,6 +41,7 @@ var allToAdd = document.getElementById('allergyInput').cloneNode(true);
 var allBox = document.getElementById("allergies");
 var repToAdd = document.getElementById("reportInput").cloneNode(true);
 var repBox = document.getElementById("reports");
+var dob;
 
 
 if (localStorage.getItem("uid") != null) {
@@ -92,9 +93,9 @@ if (localStorage.getItem("uid") != null) {
     });
 
     document.getElementById("patientContinue").addEventListener('click', async () => {
-        var dob = document.getElementById('birthDate').valueAsDate;
+        dob = document.getElementById('birthDate').valueAsDate;
         console.log(dob);
-        var userAge = calcAge(dob);
+        var userAge = calcAge(dob,new Date());
         console.log(userAge);
         await setDoc(userDocRef, {
             dob: dob,
@@ -162,11 +163,9 @@ function deleteBox(delButton) {
 }
 
 
-function calcAge(DOB) {
-    var currentDate = new Date();
-
+function calcAge(DOB, refDate) {
     // To calculate the time difference of two dates
-    var Difference_In_Time = currentDate.getTime() - DOB.getTime();
+    var Difference_In_Time = refDate.getTime() - DOB.getTime();
 
     // To calculate the no. of days between two dates
     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -252,8 +251,10 @@ async function uploadVaccines() {
     var vaccs = document.querySelectorAll("#vaccineInput");
     for (var i = 0; i < vaccs.length; i++) {
         var vaccRef = doc(db, 'patients', user.uid, "vaccinations", `vacc${i + 1}`);
+        var dateGiven = vaccs[i].querySelector("#dateGiven").valueAsDate;
+        var ageGiven = calcAge(dob, dateGiven);
         batch.set(vaccRef, {
-            ageGiven: vaccs[i].querySelector("#ageGiven").value,
+            ageGiven: ageGiven,
             disease: vaccs[i].querySelector("#disease").value,
             dateGiven: vaccs[i].querySelector("#dateGiven").value
         });
