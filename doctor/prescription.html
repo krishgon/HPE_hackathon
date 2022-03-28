@@ -6,6 +6,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create prescription</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            font-size: 1rem;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
 </head>
 
 <body>
@@ -23,8 +41,16 @@
 
     <div id="patientDetailsBox" style="display: none">
         <h2 id="patientDetails"></h2>
+        <h2>Running Medications:-</h2>
+        <ol id="currentMeds"></ol>
         <button id="showRecordsButton">Show Records</button>
+        <button id="showPrescriptionsButton">Show Prescriptions</button>
+    </div>
 
+    <div id="patientPrescriptions" style="display: none;">
+        <h2>Prescriptions:-</h2>
+        <div id="prescriptionsList"></div>
+        <button id="backButton">back</button>
     </div>
 
     <div id="patientRecords" style="display: none;">

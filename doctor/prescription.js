@@ -50,9 +50,12 @@ if (localStorage.getItem("uid") == null) {
         showRecords(recordsList);
     });
 
-    document.getElementById("backButton").addEventListener('click', () => {
-        document.getElementById("patientDetailsBox").style.display = "block";
-        document.getElementById("patientRecords").style.display = "none";
+    document.querySelectorAll("#backButton").forEach((button) => {
+        button.addEventListener('click', () => {
+            document.getElementById("patientDetailsBox").style.display = "block";
+            document.getElementById("patientRecords").style.display = "none";
+            document.getElementById("patientPrescriptions").style.display = "none";
+        });    
     });
 
     document.getElementById("submitPrescriptionButton").addEventListener('click', async () => {
@@ -75,8 +78,45 @@ if (localStorage.getItem("uid") == null) {
         delteMedicine(document.getElementById("deleteMed"));
     });
 
-    
+    document.getElementById("showPrescriptionsButton").addEventListener('click', () => {
+        document.getElementById("patientDetailsBox").style.display = "none";
+        document.getElementById("patientPrescriptions").style.display = "block";
 
+        showPrescriptions();
+    });
+
+}
+
+
+async function showPrescriptions(){
+    const prescriptionsSnapshot = await getDocs(collection(db, "patients", patient.uid, "prescriptions"));
+    prescriptionsSnapshot.forEach(async (prescription) => {
+        var list = document.getElementById("prescriptionsList");
+        var item = document.createElement("div");
+        item.style.border = "1px solid grey";
+        item.style.padding = "1rem";
+        item.style.width = "max-content";
+        item.innerHTML = `<h4 id='prescriptionDetails'>Disease: ${prescription.data().prescFor}<br>Height: ${prescription.data().height}<br>Weight: ${prescription.data().weight}<br>Doctor: ${prescription.data().doctor}</h4><h4>Medicines:-</h4>`;
+        var medTable = await getMedTable(prescription);
+        item.appendChild(medTable);
+        list.appendChild(item);
+    });
+}
+
+async function getMedTable(record){
+    var table = document.createElement("table");
+    table.innerHTML = "<tr><th>Name</th><th>Daily</th><th>Duration</th></tr>";
+    
+    const medicinesSnapshot = await getDocs(collection(db, "patients", patient.uid, "prescriptions", record.id, "medicines"));
+ 
+    medicinesSnapshot.forEach(medicine => {
+        var medItem = document.createElement("tr");
+        console.log(medicine.data());
+        medItem.innerHTML = `<td>${medicine.data().name}</td><td>${medicine.data().dailyDose}</td><td>${medicine.data().doseDuration} days</td>`;
+        table.appendChild(medItem);
+    });
+
+    return table;
 }
 
 function delteMedicine(deleteButton) {
@@ -162,12 +202,48 @@ function signPatientByEmail(email) {
                 });
 
                 document.getElementById("patientDetails").innerHTML = `Patient Name: ${patient.name} <br> Patient age: ${patient.age} <br> Patient Height: ${patient.height} <br> Patient weight: ${patient.weight} <br>`;
+                showCurrentMeds();
             } else {
                 document.getElementById("otpErrorBox").innerHTML = "Correct OTP please";
             }
         });
     });
 }
+
+
+
+async function showCurrentMeds() {
+    var list = document.getElementById("currentMeds");
+    const presSnapshot = await getDocs(collection(db, "patients", patient.uid, "prescriptions"));
+    presSnapshot.forEach(async (pres) => {
+        var presDate = pres.data().prescDate.toDate();
+        var days = parseInt(calcDaysDiff(presDate));
+        console.log(days);
+        var medsSnapshot = await getDocs(collection(db, "patients", patient.uid, "prescriptions", pres.id, "medicines"));
+        medsSnapshot.forEach((med) => {
+            console.log(med.data().name);
+            var duration = med.data().doseDuration;
+            if(duration >= days){
+                var item = document.createElement("li");
+                item.innerHTML = `${med.data().name} for ${pres.data().prescFor}`;
+                list.appendChild(item);
+            }
+        });
+    });
+}
+
+function calcDaysDiff(fromDate) {
+    var currDate = new Date();
+
+    // To calculate the time difference of two dates
+    var Difference_In_Time = currDate.getTime() - fromDate.getTime();
+
+    // To calculate the no. of days between two dates
+    var difference = Difference_In_Time / (1000 * 3600 * 24);
+    return difference;
+}
+
+
 
 
 // get all records from server and return it as an array
