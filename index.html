@@ -2,16 +2,16 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medfiles</title>
-    <script src="script.js" defer></script>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="medfiles_logo.png">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Medfiles</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="icon" href="medfiles_logo.png">
 </head>
 
 <body>
+<<<<<<< HEAD
     
 <div class="body">
 <div class="container" id="container">
@@ -49,13 +49,105 @@
 				<p class="form-subtitle">Enter your personal details and start your journey with us</p>
 				<button class="ghost" id="signUp">Sign Up</button>
 			</div>
+=======
+
+	<div class="container" id="container" style="display: block">
+		<div class="form-container sign-up-container">
+
+				<h1>Sign Up</h1>
+
+				<input type="text" placeholder="Name" id="sName" />
+				<input type="email" placeholder="Email" id="sMail" />
+				<input type="password" placeholder="Password" id="sPass" />
+				<button id="sButton">Sign Up</button>
+>>>>>>> 3853252be3ad13e5e6ef8cfab76228dcc439d8a0
+		</div>
+		<div class="form-container sign-in-container">
+
+<<<<<<< HEAD
+</div>
+=======
+				<h1>Log In</h1>
+>>>>>>> 3853252be3ad13e5e6ef8cfab76228dcc439d8a0
+
+				<input type="email" placeholder="Email" id="lMail" />
+				<input type="password" placeholder="Password" id="lPass" />
+
+				<button id="lButton">Log In</button>
+		</div>
+		<div class="overlay-container">
+			<div class="overlay">
+				<div class="overlay-panel overlay-left">
+					<h1>Welcome Back!</h1>
+					<p>To keep connected with us please login with your personal info</p>
+					<button class="ghost" id="signIn">Log In</button>
+				</div>
+				<div class="overlay-panel overlay-right">
+					<h1>Hello, User!</h1>
+					<p>Enter your personal details and start journey with us</p>
+					<button class="ghost" id="signUp">Sign Up</button>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>
 
-</div>
-
-
+	<div id="userTypeBox" style="display: none;">
+		<h1>Hi, Please tell us what are you: </h1>
+		<button id='patient'>Patient</button>
+		<button id='doctor'>Doctor</button>
+	</div>
+	<div id="successfullyCreated" style="display: none;">
+		<h1>Your profile is created successfully!</h1>
+		<button id='contButton'>Continue</button>
+	</div>
+	<div id="doctorDetails" style="display: none;">
+		</h1>Please enter the following details</h1>
+		<input type='text' id='hospital' placeholder='your hospital'>
+		<input type='text' id='specialization' placeholder='your specialization'>
+		<button id='doctorContinue'>Continue</button>
+	</div>
+	<div id="patientDetails" style="display: none;">
+		</h1>Please enter the following details</h1>
+		<input type='date' id='birthDate' placeholder='your birthdate'>
+		<input type='number' id='height' placeholder='your height'>
+		<input type='number' id='weight' placeholder='your weight'>
+		<button id='patientContinue'>Continue</button>
+	</div>
+	<div id="patientVaccinations" style="display: none;">
+		<h1>Hi, Please submit your past vaccination records: </h1>
+		<div id='vaccines'>
+			<div id='vaccineInput' style="border: 1px solid black; padding: 1rem;">
+				<input type='text' id='disease' placeholder='For what disease the vaccine was provided?'>
+				<input type='date' id='dateGiven'>
+				<button id="deleteVaccButton">🗑️</button>
+			</div>
+		</div>
+		<button id='addVaccineButton'>+</button>
+		<button id='vaccineSubmit'>Submit</button>
+	</div>
+	<div id="patientAllergies" style="display: none;">
+		<h1>Hi, Please submit your allergies: </h1>
+		<div id="allergies">
+			<div id="allergyInput" style="border: 1px solid black; padding: 1rem; display: flex;">
+				<input type='text' id='allergyFrom' placeholder='What are you allergic from?'>
+				<button id="deleteAllButton">🗑️</button>
+			</div>
+		</div>
+		<button id="addAllergyButton">+</button>
+		<button id='allergySubmit'>Submit</button>
+	</div>
+	<div id="patientPathReports" style="display: none;">
+		<h1>Hi, Please submit your pathological reports: </h1>
+		<div id="reports">
+			<div id="reportInput" style="display: flex; gap: 5px; border: 1px solid black; padding: 0.5rem;">
+				<input type='file' id='reportFiles' placeholder='What are you allergic from?'>
+				<input type='text' placeholder='This report is: ex blood report' id='reportType'>
+				<button id="deleteReportButton">🗑️</button>
+			</div>
+		</div><br>
+		<button id="addReportButton">+</button>
+		<button id='reportSubmit'>Submit</button>
+	</div>
 </body>
 
 <script type="module" src="index.js" defer></script>

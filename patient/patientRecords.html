@@ -6,28 +6,53 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Records</title>
+    <link rel="stylesheet" href="patientRecords.css">
 </head>
 
 <body>
     <h1>Welcome to patient records</h1>
-    <div>
-        <h2>Allergies:-</h2>
-        <ul id="allergiesList">
-        </ul>
+    <div id="showRecordsBox">
+        <div>
+            <h2>Allergies:-</h2>
+            <ul id="allergiesList">
+            </ul>
+        </div>
+        <div>
+            <h2>Vaccinations:-</h2>
+            <ol id="vaccinationsList">
+                <!-- <li><ul><li>Dategiven</li><li>Disease</li><li>ageGiven</li></ul></li> -->
+            </ol>
+        </div>
+        <div>
+            <h2>Pathological Reports:-</h2>
+            <ol id="pathologicalReportsList">
+
+            </ol>
+        </div>
     </div>
-    <div>
-        <h2>Vaccinations:-</h2>
-        <ol id="vaccinationsList">
-            <!-- <li><ul><li>Dategiven</li><li>Disease</li><li>ageGiven</li></ul></li> -->
-        </ol>
+    <div id="recordTypeDialog" style="display: none;">
+        <h2>Please choose your record type:</h2>
+        <button id="allergy">Allergy</button>
+        <button id="vaccination">Vaccination</button>
+        <button id="pathReport">Pathological Report</button>
     </div>
-    <div>
-        <h2>Pathological Reports:-</h2>
-        <ol id="pathologicalReportsList">
-            
-        </ol>
+    <div id="newAllergy" style="display: none;">
+        <input type='text' id='allergyFrom' placeholder='What are you allergic from?'>
+        <button id='allergySubmit'>Submit</button>
     </div>
-    <button id="recordsButton"><a href="./patientHome.html">Home</a></button>
+    <div id="newVaccination" style="display: none;">
+        <input type='text' id='disease' placeholder='For what disease the vaccine was provided?'>
+        <input type='date' id='dateGiven'>
+        <button id='vaccineSubmit'>Submit</button>
+    </div>
+    <div id="newPathReport" style="display: none;">
+        <input type='file' id='reportFile' placeholder='What are you allergic from?'>
+        <input type='text' placeholder='This report is: ex blood report' id='reportType'>
+        <button id='reportSubmit'>Submit</button>
+    </div>
+    <button id="createRecordsButton">New Record</button>
+    <button id="homeButton"><a href="./patientHome.html">Home</a></button>
 </body>
 <script src="./patientRecords.js" type="module" defer></script>
+
 </html>

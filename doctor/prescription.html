@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create prescription</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            font-size: 1rem;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>You write the davai here</h1>
+    <div id="patientAuth">
+        <input type="mail" id="patientMail" placeholder="Patient's email">
+        <button id="mailSubmitButton">Submit</button>
+    </div>
+
+    <div id="OtpDialog" style="display: none;">
+        <div id="otpErrorBox"></div>
+        <input type="text" id="otpBox" placeholder="enter OTP">
+        <button id="submitOTP">Submit</button>
+    </div>
+
+    <div id="patientDetailsBox" style="display: none">
+        <h2 id="patientDetails"></h2>
+        <h2>Running Medications:-</h2>
+        <ol id="currentMeds"></ol>
+        <div id="charts" style="display: flex;">
+            <canvas id="heightChart" style="max-width:400px; max-height:400px"></canvas>
+            <canvas id="weightChart" style="max-width:400px; max-height:400px"></canvas>
+        </div>
+        <button id="showRecordsButton">Show Records</button>
+        <button id="showPrescriptionsButton">Show Prescriptions</button>
+    </div>
+
+    <div id="patientPrescriptions" style="display: none;">
+        <h2>Prescriptions:-</h2>
+        <div id="prescriptionsList"></div>
+        <button id="backButton">back</button>
+    </div>
+
+    <div id="patientRecords" style="display: none;">
+        <div>
+            <h2>Allergies:-</h2>
+            <ul id="allergiesList">
+            </ul>
+        </div>
+        <div>
+            <h2>Vaccinations:-</h2>
+            <ol id="vaccinationsList">
+                <!-- <li><ul><li>Dategiven</li><li>Disease</li><li>ageGiven</li></ul></li> -->
+            </ol>
+        </div>
+        <div>
+            <h2>Pathological Reports:-</h2>
+            <ol id="pathologicalReportsList">
+
+            </ol>
+        </div>
+        <button id="backButton">back</button>
+    </div>
+    <br>
+    <div id="prescriptionBox" style=" border: 1px solid grey; padding: 1rem; width: max-content; display: none;">
+        <h2>Prescription:-</h2>
+        <div id="prescriptionEditBox">
+            <input type="text" id="prescFor" placeholder="Disease">
+            <input type="text" id="height" placeholder="height">
+            <input type="text" id="weight" placeholder="weight">
+            <br>
+            <div id="medicinesBox">
+                <div id="med" style="border: 1px dotted black; padding: 0.5rem; margin-top: 1rem;">
+                    <h3><div id="text"> Medicine </div></h3>
+                    <input type="text" id="medName" placeholder="Medicine Name">
+                    <input type="text" id="medDuration" placeholder="No.of days to take"><br></br>
+                    <input type="checkbox" id="day" value="day">
+                    <label>Day</label><br>
+                    <input type="checkbox" id="afternoon" value="afternoon">
+                    <label>Afternoon</label><br>
+                    <input type="checkbox" id="night" value="night">
+                    <label>Night</label><br><br>
+                    <button id="deleteMed" style="float: right; position: relative; bottom: 25px;">🗑️</button>
+                </div>
+            </div><br>
+            <button id="addMedButton">+</button>
+        </div><br>
+        <button id="submitPrescriptionButton">Submit Prescription</button><br>
+    </div>
+    <br><br><br>
+    <button><a href="./doctorHome.html">Home</a></button>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://smtpjs.com/v3/smtp.js"></script>
+<script type="module" src="./prescription.js" defer></script>
+
+</html>
