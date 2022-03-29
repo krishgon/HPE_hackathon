@@ -197,11 +197,8 @@ button.ghost {
 	transform: translateX(20%);
 }
 
-<<<<<<< HEAD
-=======
 @media screen and (max-width:800px){
     .form-container{
         flex-direction: row;
     }
 }
->>>>>>> 3853252be3ad13e5e6ef8cfab76228dcc439d8a0
