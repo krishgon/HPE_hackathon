@@ -35,8 +35,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 
-
-
 if (localStorage.getItem("uid") != null) {
     sendToRespectivePage(localStorage.getItem("uid"));
 } else {
