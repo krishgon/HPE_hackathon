@@ -193,13 +193,14 @@ function signPatientByEmail(email) {
         console.log(message);
         document.getElementById("patientAuth").style.display = "none";
 
+        document.getElementById("otpDialog").style.display = "flex"
         var otpBox = document.getElementById("otpBox");
-        otpBox.parentElement.style.display = "block";
+        
 
         document.getElementById("submitOTP").addEventListener('click', async () => {
             var typedOTP = otpBox.value;
             if (typedOTP == OTP) {
-                otpBox.parentElement.style.display = "none";
+                document.getElementById("otpDialog").style.display = "none"
                 document.getElementById("patientDetailsBox").style.display = "block";
                 document.getElementById("prescriptionBox").style.display = "block";
                 var q = query(collection(db, "patients"), where("email", "==", email));

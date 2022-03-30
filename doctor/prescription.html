@@ -6,36 +6,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create prescription</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        td,
-        th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-            font-size: 1rem;
-        }
-
-        tr:nth-child(even) {
-            background-color: #dddddd;
-        }
-    </style>
+    <link rel="stylesheet" href="prescription.css">
 </head>
 
 <body>
-    <h1>You write the davai here</h1>
-    <div id="patientAuth">
-        <input type="mail" id="patientMail" placeholder="Patient's email">
+    <div class="logoBar">
+        <a href="./doctorHome.html"><img src="./assets/homeIcon.svg" alt="home icon"></a>
+        <img src="./../logo2.svg" alt="med files logo">
+        <div></div>
+    </div>
+    <div id="patientAuth" class="formBox">
+        <div class="inputBox">
+            Patient Email:
+            <input type="mail" id="patientMail" placeholder="patient@mail.com">
+        </div>
         <button id="mailSubmitButton">Submit</button>
     </div>
-
-    <div id="OtpDialog" style="display: none;">
-        <div id="otpErrorBox"></div>
-        <input type="text" id="otpBox" placeholder="enter OTP">
+    <div id="otpDialog" style="display: none;" class="formBox">
+        <div class="inputBox">
+            One Time Password(OTP):
+            <div id="otpErrorBox"></div>
+            <input type="number" id="otpBox" placeholder="1234">
+        </div>
         <button id="submitOTP">Submit</button>
     </div>
 
@@ -77,34 +69,33 @@
         </div>
         <button id="backButton">back</button>
     </div>
-    <br>
     <div id="prescriptionBox" style=" border: 1px solid grey; padding: 1rem; width: max-content; display: none;">
         <h2>Prescription:-</h2>
         <div id="prescriptionEditBox">
             <input type="text" id="prescFor" placeholder="Disease">
             <input type="text" id="height" placeholder="height">
             <input type="text" id="weight" placeholder="weight">
-            <br>
             <div id="medicinesBox">
                 <div id="med" style="border: 1px dotted black; padding: 0.5rem; margin-top: 1rem;">
-                    <h3><div id="text"> Medicine </div></h3>
+                    <h3>
+                        <div id="text"> Medicine </div>
+                    </h3>
                     <input type="text" id="medName" placeholder="Medicine Name">
-                    <input type="text" id="medDuration" placeholder="No.of days to take"><br></br>
+                    <input type="text" id="medDuration" placeholder="No.of days to take">
                     <input type="checkbox" id="day" value="day">
-                    <label>Day</label><br>
+                    <label>Day</label>
                     <input type="checkbox" id="afternoon" value="afternoon">
-                    <label>Afternoon</label><br>
+                    <label>Afternoon</label>
                     <input type="checkbox" id="night" value="night">
-                    <label>Night</label><br><br>
+                    <label>Night</label>
                     <button id="deleteMed" style="float: right; position: relative; bottom: 25px;">🗑️</button>
                 </div>
-            </div><br>
+            </div>
             <button id="addMedButton">+</button>
-        </div><br>
-        <button id="submitPrescriptionButton">Submit Prescription</button><br>
+        </div>
+        <button id="submitPrescriptionButton">Submit Prescription</button>
     </div>
-    <br><br><br>
-    <button><a href="./doctorHome.html">Home</a></button>
+    <!-- <button><a href="./doctorHome.html">Home</a></button> -->
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://smtpjs.com/v3/smtp.js"></script>
