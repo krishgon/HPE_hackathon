@@ -11,19 +11,19 @@
 
 <body>
     <div class="logoBar">
-        <a href="./doctorHome.html"><img src="./assets/homeIcon.svg" alt="home icon"></a>
+        <a href="./doctorHome.html"><img src="./../homeIcon.svg" alt="home icon"></a>
         <img src="./../logo2.svg" alt="med files logo">
         <div></div>
     </div>
-    <div id="patientAuth" class="formBox" style="display: none;">
-        <div class="inputBox">
+    <div id="patientAuth" class="formBox">
+        <div class="emailOTPbox">
             Patient Email:
             <input type="mail" id="patientMail" placeholder="patient@mail.com">
         </div>
         <button id="mailSubmitButton">Submit</button>
     </div>
     <div id="otpDialog" style="display: none;" class="formBox" style="display: none;">
-        <div class="inputBox">
+        <div class="emailOTPbox">
             One Time Password(OTP):
             <div id="otpErrorBox"></div>
             <input type="number" id="otpBox" placeholder="1234">
@@ -31,49 +31,40 @@
         <button id="submitOTP">Submit</button>
     </div>
 
-    <div id="patientDetailsBox">
-        <h2 id="patientDetails" class="patDetails"></h2>
-        <h2>Running Medications:-</h2>
-        <ol id="currentMeds"></ol>
-        <div id="charts" style="display: flex;">
-            <canvas id="heightChart" style="max-width:400px; max-height:400px"></canvas>
-            <canvas id="weightChart" style="max-width:400px; max-height:400px"></canvas>
+    <div id="patientDetailsBox" style="display: none;">
+        <div id="userProfile">
+            <div class="user-details">
+                <div class="user-image"><img src="./../patient/assets/patientIcon.svg" alt="patient icon"></div>
+                <div class="user-info">
+                    <div class="user-name-age">
+                        <span class="user-name" id="nameBox"></span>
+                        <div class="user-age">Age : <span id="ageBox"></span> years</div>
+                    </div>
+                    <div class="user-basic-details">
+                        <div><img src="./../patient/assets/heightIcon.svg" alt="height icon"><span
+                                id="heightBox"></span>cm</div>
+                        <div><img src="./../patient/assets/weightIcon.svg" alt="weight icon"><span
+                                id="weightBox"></span>kg</div>
+                        <div><img src="./../doctor/Assets/emailIcon.svg" alt="email icon"><span id="emailBox"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button id="showRecordsButton" class="statButton">Show Records</button>
-        <button id="showPrescriptionsButton" class="statButton">Show Prescriptions</button>
+        <div id="userPrescriptions">
+            <div id="currentMedicatations">
+                <h1 class="prescriptionTitle">Current Medications:- </h1>
+            </div>
+        </div>
     </div>
 
-    <div id="patientPrescriptions" style="display: none;" class="patientPrescriptions">
-        <h2>Prescriptions:-</h2>
-        <div id="prescriptionsList"></div>
-        <button id="backButton">back</button>
-    </div>
 
-    <div id="patientRecords" style="display: none;">
-        <div>
-            <h2>Allergies:-</h2>
-            <ul id="allergiesList">
-            </ul>
-        </div>
-        <div>
-            <h2>Vaccinations:-</h2>
-            <ol id="vaccinationsList">
-                <!-- <li><ul><li>Dategiven</li><li>Disease</li><li>ageGiven</li></ul></li> -->
-            </ol>
-        </div>
-        <div>
-            <h2>Pathological Reports:-</h2>
-            <ol id="pathologicalReportsList">
-
-            </ol>
-        </div>
-        <button id="backButton">back</button>
     </div>
-    <div id="prescriptionBox">
+    <div id="prescriptionBox" style="display: none;">
         <h2>Prescription:-</h2>
         <div id="prescriptionEditBox">
             <input type="text" id="prescFor" placeholder="Disease" class="inputBox">
-            <input type="number" id="height" placeholder="height(cm)" class="inputBox"> 
+            <input type="number" id="height" placeholder="height(cm)" class="inputBox">
             <input type="number" id="weight" placeholder="weight(kg)" class="inputBox" style="margin-right: 0px">
             <div id="medicinesBox">
                 <div id="med">
@@ -95,9 +86,11 @@
                     </div>
                 </div>
             </div>
-            <button id="addMedButton" class="statButton" style="margin-top: 1rem; background-color: #D1E9FF; color: #288DEB;">Add</button>
+            <button id="addMedButton" class="statButton"
+                style="margin-top: 1rem; background-color: #D1E9FF; color: #288DEB;">Add</button>
         </div>
-        <button id="submitPrescriptionButton" class="statButton" style="width: 100%; margin-top: 3rem;">Submit Prescription</button>
+        <button id="submitPrescriptionButton" class="statButton" style="width: 100%; margin-top: 3rem;">Submit
+            Prescription</button>
     </div>
     <!-- <button><a href="./doctorHome.html">Home</a></button> -->
 </body>

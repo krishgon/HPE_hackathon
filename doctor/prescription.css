@@ -12,6 +12,7 @@
     --red: #FF0000;
     --blue: #288DEB;
     --lightBlue: #D1E9FF;
+    --logoGreen: #17BBB0;
 }
 
 body {
@@ -23,6 +24,9 @@ body {
     flex-direction: column;
     /* height: 100vh; */
     width: 100vw;
+    overflow-x: hidden;
+    margin-top: 15vh;
+    margin-bottom: 10vh;
 }
 
 .logoBar {
@@ -75,13 +79,22 @@ tr:nth-child(even) {
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.25);
 }
 
-/* .inputBox {
+.emailOTPbox{
     font-family: 'Playfair Display', serif;
     font-size: 1.3rem;
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
-} */
+}
+
+.emailOTPbox input {
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #C5C5C5;
+    font-family: 'Dosis', serif;
+    font-size: 1rem;
+}
 
 .inputBox{
     margin-right: 1rem;
@@ -175,4 +188,115 @@ tr:nth-child(even) {
     background-color: #ff8a8a;
     color: black;
     font-family: 'Roboto Slab', serif;
+}
+
+.user-details{
+    box-shadow: 0 0 24px rgba(0,0,0,0.25);
+    border-radius: 10px;
+    width: 600px;
+    max-width: 95%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px auto;
+    background-color: white;
+}
+
+.user-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.user-name{
+    font-size: 18px;
+    font-family: 'Playfair Display',serif;
+}
+
+.user-age{
+    font-family: 'Dosis', sans-serif;
+    color: #333;
+}
+
+.user-basic-details{
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 25ch;
+    margin: 10px;
+    margin-left: 0;
+}
+
+.user-basic-details div{
+    margin: 10px;
+    margin-left: 0;
+    display: flex;
+    align-items: center;
+    font-family: "Dosis",sans-serif;
+}
+
+/*Charts*/
+#charts{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#charts canvas{
+    width: 700px;
+    max-width: 95%;
+    margin: 50px;
+}
+
+
+.prescription-item{
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+    max-width: 95%;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 40px auto;
+    background-color: white;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.25);
+}
+
+.prescription-conditions{
+    display: flex;
+
+
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+}
+
+.prescription-conditions div{
+    margin: 10px 20px;
+}
+
+.medicine-list, .medicine-list th, .medicine-list td{
+    padding: 10px;
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.medicine-list th{
+    color: black;
+    font-family: 'Dosis', sans-serif;
+    font-weight: 700;
+    background-color: #5aa2e6;
+}
+
+.current-medications th{
+    background-color: var(--logoGreen);
+}
+
+.prescriptionTitle {
+    font-family: 'Playfair Display', sans-serif;
+    text-align: center;
+    font-size: 32px;
+}
+
+td {
+    background-color: white;
 }

@@ -2,9 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
-import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
-
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
 
 // Web app's Firebase configuration
 const firebaseConfig = {
@@ -20,6 +18,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
+const storage = getStorage();
 const monthsToShow = [
     'October',
     'November',
@@ -28,6 +27,7 @@ const monthsToShow = [
     'February',
     'March',
 ];
+
 
 /*Styling*/
 let patientProfile = document.getElementById('patient-profile');
@@ -54,28 +54,55 @@ if (localStorage.getItem("uid") == null) {
 } else {
     userID = localStorage.getItem("uid");
 
-    
-    dashboardNav.addEventListener('click', async () => {
+    // retrieve data from server
+    const docSnap = await getDoc(doc(db, "patients", userID));
 
-        dataContainer.innerHTML = '<div id="userProfile"> <div class="user-details"> <div class="user-image"><img src="./assets/patientIcon.svg" alt="patient icon"></div> <div class="user-info"> <div class="user-name-age"> <div class="user-name">Krish Agrawal</div> <div class="user-age">Age : 16 years</div> </div> <div class="user-basic-details"> <div ><img src="./assets/heightIcon.svg" alt="height icon">162cm</div> <div ><img src="./assets/weightIcon.svg" alt="weight icon">52kg</div> <div ><img src="./../doctor/Assets/emailIcon.svg" alt="email icon">anshuman64@gmail.com</div> </div> </div> </div> <div id="charts"> <canvas id="heightChart" ></canvas> <canvas id="weightChart" ></canvas> </div> </div>'
-        //await makeChart();
+    // show the data in the website
+    var dataToShow = ["name", "age", "email", "height", "weight"];
+    for (var i = 0; i < dataToShow.length; i++) {
+        var currentData = dataToShow[i];
+        document.getElementById(currentData + "Box").innerHTML = docSnap.get(currentData);
+        if ((currentData != "email") && (currentData != "age")) {
+            document.getElementById(currentData + "Edit").value = docSnap.get(currentData);
+        }
+    }
+
+    // collect records from the server and show it in the website
+    var recordsList = await getRecords(userID);
+    showRecords(recordsList);
+
+    dashboardNav.addEventListener('click', async () => {
+        document.getElementById('userPrescriptions').style.display = 'none';
+        document.getElementById('userRecords').style.display = 'none';
+        document.getElementById('userEditBox').style.display = 'none';
+        document.getElementById('userProfile').style.display = 'block';
+
+
         document.querySelector('.active').classList.remove('active');
         document.querySelector('#dashboard-nav-anchor').classList.add('active');
     })
-    
-    prescriptionNav.addEventListener('click',async () => {
-        dataContainer.innerHTML = '<div id="currentMedicatations"> <h1 class="prescriptionTitle">Current Medications:- </h1> </div> <div id="pastPrescriptions"> <h1 class="prescriptionTitle">Past Prescriptions:- </h1> </div>';
-        
+
+    prescriptionNav.addEventListener('click', async () => {
+        document.getElementById('userPrescriptions').style.display = 'block';
+        document.getElementById('userRecords').style.display = 'none';
+        document.getElementById('userEditBox').style.display = 'none';
+        document.getElementById('userProfile').style.display = 'none';
+
+
         await showCurrentMeds();
         await showPastMeds();
 
         document.querySelector('.active').classList.remove('active');
         document.querySelector('#prescription-nav-anchor').classList.add('active');
-    
+
     });
 
     recordsNav.addEventListener('click', () => {
-        dataContainer.innerHTML = 'gaga';
+        document.getElementById('userPrescriptions').style.display = 'none';
+        document.getElementById('userRecords').style.display = 'block';
+        document.getElementById('userEditBox').style.display = 'none';
+        document.getElementById('userProfile').style.display = 'none';
+
         document.querySelector('.active').classList.remove('active');
         document.querySelector('#records-nav-anchor').classList.add('active');
     })
@@ -87,46 +114,108 @@ if (localStorage.getItem("uid") == null) {
         window.location.replace("./../index.html");
     });
 
-    // retrieve data from server
-    const docSnap = await getDoc(doc(db, "patients", userID));
-
-    // show the data in the website
-    // var dataToShow = ["name", "age", "email", "height", "weight"];
-    // for (var i = 0; i < dataToShow.length; i++) {
-    //     var currentData = dataToShow[i];
-    //     document.getElementById(currentData + "Box").innerHTML = "your " + currentData + " is " + docSnap.get(currentData);
-    //     if ((currentData != "email") && (currentData != "age")) {
-    //         document.getElementById(currentData + "Edit").value = docSnap.get(currentData);
-    //     }
-    // }
+    // send the edits to server
+    document.getElementById("submitEditsButton").addEventListener('click', async () => {
+        uploadEdits();
+    });
 
 
 
     // open the edit interface when edit button is clicked
     document.getElementById("editButton").addEventListener('click', () => {
-        document.getElementById("userProfile").style.display = "none";
-        document.getElementById("profileEdit").style.display = "block";
+        document.getElementById('userPrescriptions').style.display = 'none';
+        document.getElementById('userRecords').style.display = 'none';
+        document.getElementById('userEditBox').style.display = 'flex';
+        document.getElementById('userProfile').style.display = 'none';
     });
 
-    // // send the edits to server
-    // document.getElementById("submitEditsButton").addEventListener('click', async () => {
+    await makeChart();
+}
 
-    //     var patientRef = doc(db, 'patients', userID);
-    //     await setDoc(patientRef, {
-    //         name: document.getElementById('nameEdit').value,
-    //         height: document.getElementById('heightEdit').value,
-    //         weight: document.getElementById('weightEdit').value
-    //     }, { merge: true });
+async function uploadEdits() {
+        var patientRef = doc(db, 'patients', userID);
+        await setDoc(patientRef, {
+            name: document.getElementById('nameEdit').value,
+            height: document.getElementById('heightEdit').value,
+            weight: document.getElementById('weightEdit').value
+        }, { merge: true });
 
-    //     location.reload();
-    // });
+        location.reload();
 }
 
 
-async function showPastMeds(){
+// get all records from server and return it as an array
+async function getRecords(uid) {
+    const allergiesSnapshot = await getDocs(collection(db, "patients", uid, "allergies"));
+    const vaccinationsSnapshot = await getDocs(collection(db, "patients", uid, "vaccinations"));
+    const pathologicalReportsSnapshot = await getDocs(collection(db, "patients", uid, "pathologicalReports"));
+
+    return [allergiesSnapshot, vaccinationsSnapshot, pathologicalReportsSnapshot];
+}
+
+// show the retrieved records in the website
+function showRecords(recordsList) {
+    recordsList.forEach(recordType => { // for each type of record (allergy, vaccinations, pathological reports)
+        recordType.forEach((record) => { // for each record in it's respective type
+            var collec; // the variable which stores which type of record is being iterated
+            console.log(record)
+
+            // detect which type of record is being iterated by examining the first 3 letters of record id and call their respective ui displayers
+            switch (record.id.slice(0, 3)) {
+                case "all":
+                    collec = "allergies";
+                    showAllergies(record);
+                    break;
+                case "vac":
+                    collec = "vaccinations";
+                    showVaccinations(record);
+                    break;
+                case "rep":
+                    collec = "pathologicalReports";
+                    showPathologicalReports(record);
+                    break;
+            }
+        });
+    });
+}
+
+function showAllergies(record) {
+    var allergy = record.data().allergyFrom;
+    var table = document.getElementById('allergiesTable');
+    var item = document.createElement("tr");
+    item.innerHTML = `<td>${allergy}</td>`;
+    table.appendChild(item);
+}
+
+function showVaccinations(record) {
+    var table = document.querySelector("#vaccinationsTable");
+    var item = document.createElement("tr");
+    item.innerHTML = `<td>${record.data().disease}</td><td>${record.data().dateGiven}</td><td>${record.data().ageGiven}</td>`;
+    table.appendChild(item);
+}
+
+
+async function showPathologicalReports(record) {
+    var type = record.data().type;
+    var fileName = record.data().fileName;
+    var table = document.querySelector("#reportsTable");
+    var item = document.createElement("tr");
+    var folder = record.id;
+
+    var url = await getDownloadURL(ref(storage, userID + '/' + folder + '/' + fileName));
+    console.log(url);
+
+    item.innerHTML = `<td>${type} Report</td> <td><button><a href="${url}" target="_blank" download>Download File</a></button></td>`;
+
+    table.appendChild(item);
+}
+
+
+async function showPastMeds() {
     const prescriptionsSnapshot = await getDocs(collection(db, "patients", userID, "prescriptions"));
     prescriptionsSnapshot.forEach(async (prescription) => {
         var list = document.getElementById("pastPrescriptions");
+        list.innerHTML = ' <h1 class="prescriptionTitle">Past Prescriptions:- </h1>';
         var item = document.createElement("div");
         item.classList.add('prescription-item');
         item.style.border = "1px solid grey";
@@ -139,6 +228,7 @@ async function showPastMeds(){
 
 async function showCurrentMeds() {
     var list = document.getElementById("currentMedicatations");
+    list.innerHTML = '<h1 class="prescriptionTitle">Current Medications:- </h1>';
     var tableParent = document.createElement("div");
     tableParent.classList.add('prescription-item');
     var table = document.createElement("table");
@@ -186,17 +276,23 @@ async function makeChartData() {
 
 async function makeChart() {
     var presProgress = await makeChartData();
-    var heights = [];
-    var weights = [];
-    monthsToShow.forEach(month => {
-        heights.push(presProgress.get(month)[0]);
-        weights.push(presProgress.get(month)[1]);
-    });
-    console.log(heights);
-    console.log(weights);
+    console.log(presProgress.size);
 
-    drawHeightChart(heights);
-    drawWeightChart(weights);
+    if(presProgress.size >= 6){
+        var heights = [];
+        var weights = [];
+        monthsToShow.forEach(month => {
+            heights.push(presProgress.get(month)[0]);
+            weights.push(presProgress.get(month)[1]);
+        });
+        console.log(heights);
+        console.log(weights);
+    
+        drawHeightChart(heights);
+        drawWeightChart(weights);
+    }else{
+        document.getElementById('charts').innerHTML = '';
+    }
 }
 
 

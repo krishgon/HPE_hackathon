@@ -44,19 +44,11 @@ if (localStorage.getItem("uid") == null) {
     var med = document.getElementById("med").cloneNode(true);
     var medBox = document.getElementById("medicinesBox");
 
+
     // when the submit button is clicked, sign in the patient whose email is entered
     document.getElementById("mailSubmitButton").addEventListener('click', () => {
         var email = document.getElementById("patientMail").value;
         signPatientByEmail(email);
-    });
-
-    document.getElementById("showRecordsButton").addEventListener('click', async () => {
-        document.getElementById("patientDetailsBox").style.display = "none";
-        document.getElementById("patientRecords").style.display = "block";
-
-
-        var recordsList = await getRecords(patient.uid);
-        showRecords(recordsList);
     });
 
     document.querySelectorAll("#backButton").forEach((button) => {
@@ -87,30 +79,8 @@ if (localStorage.getItem("uid") == null) {
         delteMedicine(document.getElementById("deleteMed"));
     });
 
-    document.getElementById("showPrescriptionsButton").addEventListener('click', () => {
-        document.getElementById("patientDetailsBox").style.display = "none";
-        document.getElementById("patientPrescriptions").style.display = "block";
-
-        showPrescriptions();
-    });
-
 }
 
-
-async function showPrescriptions() {
-    const prescriptionsSnapshot = await getDocs(collection(db, "patients", patient.uid, "prescriptions"));
-    prescriptionsSnapshot.forEach(async (prescription) => {
-        var list = document.getElementById("prescriptionsList");
-        var item = document.createElement("div");
-        item.style.border = "1px solid grey";
-        item.style.padding = "1rem";
-        item.style.width = "max-content";
-        item.innerHTML = `<h4 id='prescriptionDetails'>Disease: ${prescription.data().prescFor}<br>Height: ${prescription.data().height}<br>Weight: ${prescription.data().weight}<br>Doctor: ${prescription.data().doctor}</h4><h4>Medicines:-</h4>`;
-        var medTable = await getMedTable(prescription);
-        item.appendChild(medTable);
-        list.appendChild(item);
-    });
-}
 
 async function getMedTable(record) {
     var table = document.createElement("table");
@@ -195,7 +165,7 @@ function signPatientByEmail(email) {
 
         document.getElementById("otpDialog").style.display = "flex"
         var otpBox = document.getElementById("otpBox");
-        
+
 
         document.getElementById("submitOTP").addEventListener('click', async () => {
             var typedOTP = otpBox.value;
@@ -211,9 +181,17 @@ function signPatientByEmail(email) {
                     console.log(patient);
                 });
 
-                document.getElementById("patientDetails").innerHTML = `Patient Name: ${patient.name} <br> Patient age: ${patient.age} <br> Patient Height: ${patient.height} <br> Patient weight: ${patient.weight} <br>`;
-                showCurrentMeds();
-                await makeChart();
+                // retrieve data from server
+                const patientSnap = await getDoc(doc(db, "patients", patient.uid));
+                console.log(patientSnap);
+
+                var dataToShow = ["name", "age", "email", "height", "weight"];
+                for (var i = 0; i < dataToShow.length; i++) {
+                    var currentData = dataToShow[i];
+                    document.getElementById(currentData + "Box").innerHTML = patientSnap.get(currentData);
+                }
+                await showCurrentMeds();
+
             } else {
                 document.getElementById("otpErrorBox").innerHTML = "Correct OTP please";
             }
@@ -224,8 +202,18 @@ function signPatientByEmail(email) {
 
 
 async function showCurrentMeds() {
-    var list = document.getElementById("currentMeds");
+    var list = document.getElementById("currentMedicatations");
+    list.innerHTML = '<h1 class="prescriptionTitle">Current Medications:- </h1>';
+    var tableParent = document.createElement("div");
+    tableParent.classList.add('prescription-item');
+    var table = document.createElement("table");
+    table.classList.add('medicine-list');
+    table.classList.add('current-medications');
+    table.innerHTML = "<tr><th>Sr.no</th><th>Medicine</th><th>Duration</th><th>Dose</th></tr>";
+
     const presSnapshot = await getDocs(collection(db, "patients", patient.uid, "prescriptions"));
+    var i = 0;
+
     presSnapshot.forEach(async (pres) => {
         var presDate = pres.data().prescDate.toDate();
         var days = parseInt(calcDaysDiff(presDate));
@@ -235,13 +223,17 @@ async function showCurrentMeds() {
             console.log(med.data().name);
             var duration = med.data().doseDuration;
             if (duration >= days) {
-                var item = document.createElement("li");
-                item.innerHTML = `${med.data().name} for ${pres.data().prescFor}`;
-                list.appendChild(item);
+                i++;
+                var item = document.createElement("tr");
+                item.innerHTML = `<td>${i}.</td><td>${med.data().name}</td><td>${duration} days</td><td>${med.data().dailyDose}</td>`;
+                table.appendChild(item);
             }
         });
     });
+    tableParent.appendChild(table);
+    list.appendChild(tableParent);
 }
+
 
 function calcDaysDiff(fromDate) {
     var currDate = new Date();
@@ -252,167 +244,4 @@ function calcDaysDiff(fromDate) {
     // To calculate the no. of days between two dates
     var difference = Difference_In_Time / (1000 * 3600 * 24);
     return difference;
-}
-
-
-
-
-// get all records from server and return it as an array
-async function getRecords(uid) {
-    const allergiesSnapshot = await getDocs(collection(db, "patients", uid, "allergies"));
-    const vaccinationsSnapshot = await getDocs(collection(db, "patients", uid, "vaccinations"));
-    const pathologicalReportsSnapshot = await getDocs(collection(db, "patients", uid, "pathologicalReports"));
-
-    return [allergiesSnapshot, vaccinationsSnapshot, pathologicalReportsSnapshot];
-}
-
-// show the retrieved records in the website
-function showRecords(recordsList) {
-    recordsList.forEach(recordType => { // for each type of record (allergy, vaccinations, pathological reports)
-        recordType.forEach((record) => { // for each record in it's respective type
-            var collec; // the variable which stores which type of record is being iterated
-
-            // detect which type of record is being iterated by examining the first 3 letters of record id and call their respective ui displayers
-            switch (record.id.slice(0, 3)) {
-                case "all":
-                    collec = "allergies";
-                    showAllergies(record);
-                    break;
-                case "vac":
-                    collec = "vaccinations";
-                    showVaccinations(record);
-                    break;
-                case "rep":
-                    collec = "pathologicalReports";
-                    showPathologicalReports(record);
-                    break;
-            }
-        });
-    });
-}
-
-
-function showAllergies(record) {
-    var allergy = record.data().allergyFrom;
-    var list = document.querySelector("#allergiesList");
-    list.innerHTML = "";
-    var item = document.createElement("li");
-    item.appendChild(document.createTextNode(allergy));
-    list.appendChild(item);
-}
-
-function showVaccinations(record) {
-    var list = document.querySelector("#vaccinationsList");
-    list.innerHTML = "";
-    var item = document.createElement("li");
-    var subList = document.createElement("ul");
-
-    for (var property in record.data()) {
-        var subListItem = document.createElement("li");
-        subListItem.appendChild(document.createTextNode(record.data()[property]));
-        subList.appendChild(subListItem);
-    }
-    item.appendChild(subList);
-    list.appendChild(item);
-}
-
-
-async function showPathologicalReports(record) {
-    var type = record.data().type;
-    var fileName = record.data().fileName;
-    var list = document.querySelector("#pathologicalReportsList");
-    list.innerHTML = "";
-    var item = document.createElement("li");
-    item.appendChild(document.createTextNode(type));
-    var downButton = document.createElement("button");
-    var folder = record.id;
-
-    var url = await getDownloadURL(ref(storage, patient.uid + '/' + folder + '/' + fileName));
-
-    console.log(url);
-
-    downButton.innerHTML = '<a href="' + url + '" target="_blank" download>Download File</a>';
-    item.appendChild(downButton);
-    list.appendChild(item);
-}
-
-async function makeChartData() {
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    var presProgress = new Map();
-
-    const presSnapshot = await getDocs(collection(db, "patients", patient.uid, "prescriptions"));
-    presSnapshot.forEach(async (pres) => {
-        var presDate = pres.data().prescDate.toDate();
-        var month = months[presDate.getMonth()];
-        var height = pres.data().height;
-        var weight = pres.data().weight;
-        presProgress.set(month, [height, weight]);
-    });
-    return presProgress;
-}
-
-async function makeChart() {
-    var presProgress = await makeChartData();
-    var heights = [];
-    var weights = [];
-    monthsToShow.forEach(month => {
-        heights.push(presProgress.get(month)[0]);
-        weights.push(presProgress.get(month)[1]);
-    });
-    console.log(heights);
-    console.log(weights);
-
-    drawHeightChart(heights);
-    drawWeightChart(weights);
-}
-
-
-function drawHeightChart(heights) {
-    const labels = monthsToShow;
-
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'Height(cm)',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: heights,
-        }]
-    };
-
-    const config = {
-        type: 'line',
-        data: data,
-        options: {}
-    };
-
-    const myChart = new Chart(
-        document.getElementById('heightChart'),
-        config
-    );
-}
-
-function drawWeightChart(weights) {
-    const labels = monthsToShow;
-
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'Weights(Kg)',
-            backgroundColor: 'rgb(0, 0, 0)',
-            borderColor: 'rgb(0, 0, 0)',
-            data: weights,
-        }]
-    };
-
-    const config = {
-        type: 'line',
-        data: data,
-        options: {}
-    };
-
-    const myChart = new Chart(
-        document.getElementById('weightChart'),
-        config
-    );
 }
