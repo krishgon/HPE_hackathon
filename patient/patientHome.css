@@ -186,7 +186,33 @@ li > a > img{
 
 /*Prescription*/
 .prescription-item{
-    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+    max-width: 95%;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 40px auto;
+    background-color: white;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.25);
+}
+
+
+
+.prescription-conditions{
+    display: flex;
+
+
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+}
+
+.prescription-conditions div{
+    margin: 10px 20px;
+}
+
+.medicine-list{
+    margin: 10px 20px;
 }
 
 .medicine-list, .medicine-list th, .medicine-list td{
@@ -201,4 +227,14 @@ li > a > img{
     font-family: 'Dosis', sans-serif;
     font-weight: 700;
     background-color: var(--blue);
+}
+
+.current-medications th{
+    background-color: var(--logoGreen);
+}
+
+.prescriptionTitle {
+    font-family: 'Playfair Display', sans-serif;
+    text-align: center;
+    font-size: 32px;
 }

@@ -30,42 +30,58 @@ const monthsToShow = [
 ];
 
 /*Styling*/
-let patientProfile=document.getElementById('patient-profile');
-let profileAccordion=document.getElementById('profile-accordion');
-patientProfile.addEventListener('click',()=>{
+let patientProfile = document.getElementById('patient-profile');
+let profileAccordion = document.getElementById('profile-accordion');
+patientProfile.addEventListener('click', () => {
     profileAccordion.classList.toggle('invisible');
 })
 
 var userID = localStorage.getItem('uid');
-await makeChart();
+// await makeChart();
 
 /*Navigation*/
-let dataContainer=document.getElementById('data-container');
-let dashboardNav=document.getElementById('dashboard-nav');
-let prescriptionNav=document.getElementById('prescription-nav');
-let recordsNav=document.getElementById('records-nav');
+let dataContainer = document.getElementById('data-container');
+let dashboardNav = document.getElementById('dashboard-nav');
+let prescriptionNav = document.getElementById('prescription-nav');
+let recordsNav = document.getElementById('records-nav');
 
-dashboardNav.addEventListener('click',async ()=>{
-    dataContainer.innerHTML='<div id="userProfile"> <div class="user-details"> <div class="user-image"><img src="./assets/patientIcon.svg" alt="patient icon"></div> <div class="user-info"> <div class="user-name-age"> <div class="user-name">Krish Agrawal</div> <div class="user-age">Age : 16 years</div> </div> <div class="user-basic-details"> <div ><img src="./assets/heightIcon.svg" alt="height icon">162cm</div> <div ><img src="./assets/weightIcon.svg" alt="weight icon">52kg</div> <div ><img src="./../doctor/Assets/emailIcon.svg" alt="email icon">anshuman64@gmail.com</div> </div> </div> </div> <div id="charts"> <canvas id="heightChart" ></canvas> <canvas id="weightChart" ></canvas> </div> </div>'
-    await makeChart();
+dashboardNav.addEventListener('click', async () => {
+    dataContainer.innerHTML = '<div id="userProfile"> <div class="user-details"> <div class="user-image"><img src="./assets/patientIcon.svg" alt="patient icon"></div> <div class="user-info"> <div class="user-name-age"> <div class="user-name">Krish Agrawal</div> <div class="user-age">Age : 16 years</div> </div> <div class="user-basic-details"> <div ><img src="./assets/heightIcon.svg" alt="height icon">162cm</div> <div ><img src="./assets/weightIcon.svg" alt="weight icon">52kg</div> <div ><img src="./../doctor/Assets/emailIcon.svg" alt="email icon">anshuman64@gmail.com</div> </div> </div> </div> <div id="charts"> <canvas id="heightChart" ></canvas> <canvas id="weightChart" ></canvas> </div> </div>'
+    // await makeChart();
 })
 
-prescriptionNav.addEventListener('click',()=>{
-    dataContainer.innerHTML='haha';
+prescriptionNav.addEventListener('click', () => {
+    dataContainer.innerHTML = 'haha';
 })
 
-recordsNav.addEventListener('click',()=>{
-    dataContainer.innerHTML='gaga';
+recordsNav.addEventListener('click', () => {
+    dataContainer.innerHTML = 'gaga';
 })
 
 
 
-/* If the user has not signed in, take him/her to signin page else proceed
+/* If the user has not signed in, take him/her to signin page else proceed */
 if (localStorage.getItem("uid") == null) {
     window.location.replace("./../index.html");
 } else {
+    userID = localStorage.getItem("uid");
+
+    const prescriptionsSnapshot = await getDocs(collection(db, "patients", userID, "prescriptions"));
+    prescriptionsSnapshot.forEach(async (prescription) => {
+        var list = document.getElementById("pastPrescriptions");
+        var item = document.createElement("div");
+        item.classList.add('prescription-item');
+        item.style.border = "1px solid grey";
+        item.innerHTML = `<div class="prescription-conditions"><div class="disease-name">Disease: ${prescription.data().prescFor}</div><div class="doctor-name">Doctor: ${prescription.data().doctor}</div></div>`;
+        var medTable = await getMedTable(prescription);
+        item.appendChild(medTable);
+        list.appendChild(item);
+    });
+
+
+
+
     // when logout button is clicked, remove the uid from storage and take user to sign in page
-    var userID = localStorage.getItem("uid");
     document.getElementById("logoutButton").addEventListener('click', () => {
         localStorage.removeItem('uid');
         window.location.replace("./../index.html");
@@ -75,14 +91,14 @@ if (localStorage.getItem("uid") == null) {
     const docSnap = await getDoc(doc(db, "patients", userID));
 
     // show the data in the website
-    var dataToShow = ["name", "age", "email", "height", "weight"];
-    for (var i = 0; i < dataToShow.length; i++) {
-        var currentData = dataToShow[i];
-        document.getElementById(currentData + "Box").innerHTML = "your " + currentData + " is " + docSnap.get(currentData);
-        if ((currentData != "email") && (currentData != "age")) {
-            document.getElementById(currentData + "Edit").value = docSnap.get(currentData);
-        }
-    }
+    // var dataToShow = ["name", "age", "email", "height", "weight"];
+    // for (var i = 0; i < dataToShow.length; i++) {
+    //     var currentData = dataToShow[i];
+    //     document.getElementById(currentData + "Box").innerHTML = "your " + currentData + " is " + docSnap.get(currentData);
+    //     if ((currentData != "email") && (currentData != "age")) {
+    //         document.getElementById(currentData + "Edit").value = docSnap.get(currentData);
+    //     }
+    // }
 
     await showCurrentMeds();
 
@@ -105,12 +121,21 @@ if (localStorage.getItem("uid") == null) {
 
         location.reload();
     });
-
 }
 
+
 async function showCurrentMeds() {
-    var list = document.getElementById("currentMeds");
+    var list = document.getElementById("currentMedicatations");
+    var tableParent = document.createElement("div");
+    tableParent.classList.add('prescription-item');
+    var table = document.createElement("table");
+    table.classList.add('medicine-list');
+    table.classList.add('current-medications');
+    table.innerHTML = "<tr><th>Sr.no</th><th>Medicine</th><th>Duration</th><th>Dose</th></tr>";
+
     const presSnapshot = await getDocs(collection(db, "patients", userID, "prescriptions"));
+    var i = 0;
+
     presSnapshot.forEach(async (pres) => {
         var presDate = pres.data().prescDate.toDate();
         var days = parseInt(calcDaysDiff(presDate));
@@ -120,13 +145,16 @@ async function showCurrentMeds() {
             console.log(med.data().name);
             var duration = med.data().doseDuration;
             if (duration >= days) {
-                var item = document.createElement("li");
-                item.innerHTML = `${med.data().name} for ${pres.data().prescFor}`;
-                list.appendChild(item);
+                i++;
+                var item = document.createElement("tr");
+                item.innerHTML = `<td>${i}.</td><td>${med.data().name}</td><td>${duration} days</td><td>${med.data().dailyDose}</td>`;
+                table.appendChild(item);
             }
         });
     });
-}*/
+    tableParent.appendChild(table);
+    list.appendChild(tableParent);
+}
 
 async function makeChartData() {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -143,7 +171,7 @@ async function makeChartData() {
     return presProgress;
 }
 
-async function makeChart(){
+async function makeChart() {
     var presProgress = await makeChartData();
     var heights = [];
     var weights = [];
@@ -184,7 +212,7 @@ function drawHeightChart(heights) {
     );
 }
 
-function drawWeightChart(weights){
+function drawWeightChart(weights) {
     const labels = monthsToShow;
 
     const data = {
@@ -210,7 +238,7 @@ function drawWeightChart(weights){
 }
 
 
-/*
+
 function calcDaysDiff(fromDate) {
     var currDate = new Date();
 
@@ -220,5 +248,23 @@ function calcDaysDiff(fromDate) {
     // To calculate the no. of days between two dates
     var difference = Difference_In_Time / (1000 * 3600 * 24);
     return difference;
-}*/
+}
 
+
+async function getMedTable(record) {
+    var table = document.createElement("table");
+    table.classList.add('medicine-list');
+    table.innerHTML = "<tr><th>Sr.no</th><th>Medicine</th><th>Duration</th><th>Dose</th></tr>";
+
+    const medicinesSnapshot = await getDocs(collection(db, "patients", userID, "prescriptions", record.id, "medicines"));
+
+    var i = 1;
+    medicinesSnapshot.forEach(medicine => {
+        var medItem = document.createElement("tr");
+        console.log(medicine.data());
+        medItem.innerHTML = `<td>${i}.</td><td>${medicine.data().name}</td><td>${medicine.data().doseDuration} days</td><td>${medicine.data().dailyDose}</td>`;
+        table.appendChild(medItem);
+    });
+
+    return table;
+}
