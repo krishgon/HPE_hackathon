@@ -45,3 +45,16 @@ document.getElementById("addAllergyButton").addEventListener('click', () => {
 document.getElementById('deleteAllergyButton').addEventListener('click',()=>{
     allBox.removeChild(allBox.lastChild);
 })
+
+
+
+document.getElementById("addReportButton").addEventListener('click', () => {
+    const vaccInput=document.createElement('div');
+    vaccInput.setAttribute('id','vaccineInput');
+    vaccInput.innerHTML='<div id="vaccineInput" style="border: 1px solid black; padding: 1rem;"> <input type="text" id="disease" placeholder="For what disease the vaccine was provided?"> <input type="date" id="dateGiven"> </div>';
+    vaccBox.appendChild(vaccInput);
+});
+
+document.getElementById('deleteReportButton').addEventListener('click',()=>{
+    vaccBox.removeChild(vaccBox.lastChild);
+})
