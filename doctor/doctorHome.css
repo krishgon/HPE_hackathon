@@ -6,6 +6,14 @@
     padding: 0%;
 }
 
+:root {
+    --darkWhite: #f6f6f6;
+    --lightBlack: #626262;
+    --red: #FF0000;
+    --blue: #288DEB;
+    --lightBlue: #D1E9FF;
+}
+
 body {
     /* background-color: blue; */
     background: linear-gradient(116.55deg, #2B99FF 0.39%, #2B97FC 8.88%, #288CEA 52.46%, #2580D6 100%);
@@ -36,7 +44,7 @@ body {
 .upperContainer {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    background-color: #f6f6f6;
+    background-color: var(--darkWhite);
     width: 75vw;
     display: flex;
     flex-direction: row;
@@ -58,7 +66,7 @@ body {
 
 .profileDetails {
     height: 30vh;
-    margin-left: 1rem;
+    margin-left: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -98,7 +106,7 @@ body {
 .lowerContainer {
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
-    background-color: #D1E9FF;
+    background-color: var(--lightBlue);
     width: 75vw;
     padding: 1.5rem 2rem;
     display: flex;
@@ -125,7 +133,7 @@ a {
     font-family: 'Roboto Slab', serif;
     font-size: 1.2rem;
     padding: 0.75rem 2rem;
-    background-color: #288DEB;
+    background-color: var(--blue);
     border-radius: 10px;
     width: 22vw;
     color: white;
@@ -145,7 +153,7 @@ a {
     font-family: 'Roboto Slab', serif;
     font-size: 1.2rem;
     padding: 0.75rem 2rem;
-    background-color: #FF0000; 
+    background-color: var(--red); 
     color: #8C0000;
     border-radius: 10px;
     width: 22vw;
@@ -158,4 +166,52 @@ a {
 
 .logoutButton:hover {
     background-color: #e64e4e;
+}
+
+.editContainer {
+    background-color: white;
+    padding: 1.5rem;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 20px;
+    width: 30vw;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.25);
+    /* align-items: center; */
+}
+
+.editBox {
+    color: var(--lightBlack);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.editBox input{
+    margin-top: 0.4rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #C5C5C5;
+    font-family: 'Dosis', serif;
+    font-size: 1rem;
+}
+
+.editBox input:focus{
+    outline: 1px solid var(--blue);
+}
+
+.editContainer button {
+    font-size: 1rem;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-family: 'Roboto Slab', serif;
+    border: none;
+    width: 100%;
+    color: white;
+    background-color: var(--blue);
+    transition: 0.3s;
+}
+
+.editContainer button:hover{
+    background-color: #006bd0;
 }

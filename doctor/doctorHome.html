@@ -37,18 +37,26 @@
             <img src="./assets/Researching-amico.svg" alt="Doctor Researching">
         </div>
     </div>
-    <div class="lowerContainer">
-        <button><a href="./prescription.html"><img src="./assets/prescriptionIcon.svg" alt="prescription icon"> Create prescription</a></button>
+    <div class="lowerContainer" id="navButtons">
+        <button><a href="./prescription.html"><img src="./assets/prescriptionIcon.svg" alt="prescription icon"> Create
+                prescription</a></button>
         <button id="editButton"><img src="./assets/editIcon.svg" alt="edit icon"> Edit profile</button>
-        <button id="logoutButton" class="logoutButton"><img src="./assets/logoutIcon.svg" alt="logout icon"> Logout</button>
+        <button id="logoutButton" class="logoutButton"><img src="./assets/logoutIcon.svg" alt="logout icon">
+            Logout</button>
     </div>
-    <div id="profileEdit" style="display: none;">
-        Name:
-        <input type="text" id="nameEdit">
-        Hospital:
-        <input type="text" id="hospitalEdit">
-        Specialization:
-        <input type="text" id="specializationEdit">
+    <div id="profileEdit" style="display: none;" class="editContainer">
+        <div class="editBox">
+            Name:
+            <input type="text" id="nameEdit">
+        </div>
+        <div class="editBox">
+            Hospital:
+            <input type="text" id="hospitalEdit">
+        </div>
+        <div class="editBox">
+            Specialization: 
+            <input type="text" id="specializationEdit">
+        </div>
         <button id="submitEditsButton">Submit</button>
     </div>
 </body>

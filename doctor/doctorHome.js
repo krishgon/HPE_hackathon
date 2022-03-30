@@ -50,6 +50,7 @@ if (localStorage.getItem("uid") == null) {
 
     document.getElementById("editButton").addEventListener('click', () => {
         document.getElementById("userProfile").style.display = "none";
+        document.getElementById("navButtons").style.display = "none";
         document.getElementById("profileEdit").style.display = "block";
     });
 
