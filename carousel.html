@@ -13,67 +13,67 @@
 
 <body>
 <div class="carousel-container">
-<h1 class="carousel-title">Complete a few steps before we continue</h1>
+    <h1 class="carousel-title">Complete a few steps before we continue</h1>
 
-<div class="carousel-box" id="carousel-box">
-    <div class="carousel-slide">
-        <div class="text"> 
-            <h2 class="instruction">Please submit your allergies</h2> 
-            <p style="text-align: center;">To skip this step, remove all the inputs and continue</p> 
-        </div> 
+    <div class="carousel-box" id="carousel-box">
 
-        <div id="allergies"> 
-            <div id="allergyInput" style="border: 1px solid black; padding: 1rem;"> 
-                <input type="text" id="sAllergy" placeholder="What allergy do you have"> 
+        <div class="carousel-slide">
+            <div class="text"> 
+                <h2 class="instruction">Please submit your allergies</h2> 
+                <p style="text-align: center;">To skip this step, remove all the inputs and continue</p> 
+            </div> 
+
+               <div id="allergies"> 
+                <div id="allergyInput" style="border: 1px solid black; padding: 1rem;"> 
+                    <input type="text" id="sAllergy" placeholder="What allergy do you have"> 
+                </div>
+            </div>
+        
+            <div class="input-controller">
+                <button id="addAllergyButton">+</button> 
+                <button id="deleteAllergyButton">-</button> 
             </div>
         </div>
-    
-        <div class="input-controller">
-            <button id="addAllergyButton">+</button> 
-            <button id="deleteAllergyButton">-</button> 
+
+        <div class="carousel-slide" style="display: none;">
+             <h2 class="instruction">Please enter the following details</h2>
+
+             <div class="input-boxes">        
+                 <div class="extra-input">
+                     <label for="sBirthdate">Date of Birth</label>
+                     <input type="date" id="sBirthdate" class="carousel-input">
+                 </div>  
+             
+                 <div class="extra-input">            
+                     <label for="sHeight">Height</label>            
+                     <input type="number" id="sHeight" placeholder="in cm" class="carousel-input">
+                 </div>        
+             
+                 <div class="extra-input">            
+                     <label for="sWeight">Weight</label>            
+                     <input type="number" id="sWeight" placeholder="in kg" class="carousel-input">        
+                 </div>    
+             </div>
+         </div>
+
+        <div class="carousel-slide" style="display: none;">
+            <div class="text"> 
+                <h2 class="instruction">Please submit your past vaccination records</h2> 
+                <p style="text-align: center;">To skip this step, remove all the inputs and continue</p> 
+            </div> 
+
+            <div id="vaccines"> 
+                <div id="vaccineInput" style="border: 1px solid black; padding: 1rem;"> 
+                    <input type="text" id="disease" placeholder="For what disease the vaccine was provided?"> 
+                    <input type="date" id="dateGiven">
+                </div>
+            </div>
+
+            <div class="input-controller">
+                <button id="addVaccineButton">+</button> 
+                <button id="deleteVaccButton">-</button> 
+            </div>
         </div>
-    </div>
-
-   <div class="carousel-slide" style="display: none;">
-        <h2 class="instruction">Please enter the following details</h2>
-            
-        <div class="input-boxes">        
-            <div class="extra-input">
-                <label for="sBirthdate">Date of Birth</label>
-                <input type="date" id="sBirthdate" class="carousel-input">
-            </div>  
-
-            <div class="extra-input">            
-                <label for="sHeight">Height</label>            
-                <input type="number" id="sHeight" placeholder="in cm" class="carousel-input">
-            </div>        
-
-            <div class="extra-input">            
-                <label for="sWeight">Weight</label>            
-                <input type="number" id="sWeight" placeholder="in kg" class="carousel-input">        
-            </div>    
-        </div>
-    </div>
-
-    <div class="carousel-slide" style="display: none;">
-    <div class="text"> 
-        <h2 class="instruction">Please submit your past vaccination records</h2> 
-        <p style="text-align: center;">To skip this step, remove all the inputs and continue</p> 
-    </div> 
-    <div id="vaccines"> 
-        <div id="vaccineInput" style="border: 1px solid black; padding: 1rem;"> 
-            <input type="text" id="disease" placeholder="For what disease the vaccine was provided?"> 
-            <input type="date" id="dateGiven">
-        </div>
-    </div>
-
-    <div class="input-controller">
-        <button id="addVaccineButton">+</button> 
-        <button id="deleteVaccButton">-</button> 
-    </div>
-
-    
-    
 </div>
 
 <div class="carousel-control">
@@ -83,25 +83,6 @@
     <button id="carousel-continue">Continue</button>
 </div>
 
-</div>
-
-</div>
 </body>
 
 </html>
-<div class="text">
-    <h2 class="instruction">Please submit your allergies</h2>
-    <p style="text-align: center;">To skip this step, remove all the inputs and continue</p>
-</div>
-
-<div id='allergies'>
-    <div id='allergyInput' style="border: 1px solid black; padding: 1rem;">
-        <input type='text' id='allergy' placeholder='What allergy do you have'>
-    </div>
-</div>
-
-<div class="list-buttons">
-    <button id='addAllergyButton'>+</button>
-    <button id="deleteAllergyButton">-</button>
-</div>
-    

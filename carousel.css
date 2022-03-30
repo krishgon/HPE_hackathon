@@ -1,7 +1,3 @@
-body{
-    overflow: hidden;
-}
-
 .carousel-container{
     height: 100vh;
     display: flex;
