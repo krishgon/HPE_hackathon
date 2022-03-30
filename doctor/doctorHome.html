@@ -6,15 +6,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="stylesheet" href="doctorHome.css">
 </head>
 
 <body>
-    <h1>Welcome to doctors homepage</h1>
-    <div id="userProfile">
-        <h2 id="nameBox"></h2>
-        <h2 id="hospitalBox"></h2>
-        <h2 id="specializationBox"></h2>
-        <h2 id="emailBox"></h2>
+    <div class="logoBar">
+        <img src="./../logo2.svg" alt="med files logo">
+    </div>
+    <div id="userProfile" class="upperContainer">
+        <div class="profileContainer">
+            <img src="./assets/doctorIcon.png" alt="doctor's icon">
+            <div class="profileDetails">
+                <div>
+                    <div id="nameBox" class="name"></div>
+                    <div id="specializationBox" class="specialization"></div>
+                </div>
+                <div>
+                    <div class="hospital">
+                        <img src="./assets/hospitalcon.svg" alt="hospital icon">
+                        <div id="hospitalBox"></div>
+                    </div>
+                    <div class="email">
+                        <img src="./assets/emailIcon.svg" alt="email icon">
+                        <div id="emailBox"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="illustrationBox">
+            <img src="./assets/Researching-amico.svg" alt="Doctor Researching">
+        </div>
+    </div>
+    <div class="lowerContainer">
+        <button><a href="./prescription.html"><img src="./assets/prescriptionIcon.svg" alt="prescription icon"> Create prescription</a></button>
+        <button id="editButton"><img src="./assets/editIcon.svg" alt="edit icon"> Edit profile</button>
+        <button id="logoutButton" class="logoutButton"><img src="./assets/logoutIcon.svg" alt="logout icon"> Logout</button>
     </div>
     <div id="profileEdit" style="display: none;">
         Name:
@@ -25,9 +51,6 @@
         <input type="text" id="specializationEdit">
         <button id="submitEditsButton">Submit</button>
     </div>
-    <button id="logoutButton">Logout</button>
-    <button id="editButton">Edit profile</button>
-    <button><a href="./prescription.html">Create prescription</a></button>
 </body>
 <script type="module" src="./doctorHome.js" defer></script>
 

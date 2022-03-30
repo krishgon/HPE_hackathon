@@ -42,7 +42,7 @@ if (localStorage.getItem("uid") == null) {
         var currentProperty = dataToShow[i];
         var currentData = docSnap.get(currentProperty);
         console.log(currentData);
-        document.getElementById(currentProperty + "Box").innerHTML = "your " + currentProperty + " is " + currentData;
+        document.getElementById(currentProperty + "Box").innerHTML = currentData;
         if (currentProperty != "email") {
             document.getElementById(currentProperty + "Edit").value = currentData;
         }
