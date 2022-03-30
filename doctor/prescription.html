@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create prescription</title>
-    <link rel="stylesheet" href="prescription.css">
+    <link rel="stylesheet" href="./prescription.css">
 </head>
 
 <body>
@@ -15,14 +15,14 @@
         <img src="./../logo2.svg" alt="med files logo">
         <div></div>
     </div>
-    <div id="patientAuth" class="formBox">
+    <div id="patientAuth" class="formBox" style="display: none;">
         <div class="inputBox">
             Patient Email:
             <input type="mail" id="patientMail" placeholder="patient@mail.com">
         </div>
         <button id="mailSubmitButton">Submit</button>
     </div>
-    <div id="otpDialog" style="display: none;" class="formBox">
+    <div id="otpDialog" style="display: none;" class="formBox" style="display: none;">
         <div class="inputBox">
             One Time Password(OTP):
             <div id="otpErrorBox"></div>
@@ -31,19 +31,19 @@
         <button id="submitOTP">Submit</button>
     </div>
 
-    <div id="patientDetailsBox" style="display: none">
-        <h2 id="patientDetails"></h2>
+    <div id="patientDetailsBox">
+        <h2 id="patientDetails" class="patDetails"></h2>
         <h2>Running Medications:-</h2>
         <ol id="currentMeds"></ol>
         <div id="charts" style="display: flex;">
             <canvas id="heightChart" style="max-width:400px; max-height:400px"></canvas>
             <canvas id="weightChart" style="max-width:400px; max-height:400px"></canvas>
         </div>
-        <button id="showRecordsButton">Show Records</button>
-        <button id="showPrescriptionsButton">Show Prescriptions</button>
+        <button id="showRecordsButton" class="statButton">Show Records</button>
+        <button id="showPrescriptionsButton" class="statButton">Show Prescriptions</button>
     </div>
 
-    <div id="patientPrescriptions" style="display: none;">
+    <div id="patientPrescriptions" style="display: none;" class="patientPrescriptions">
         <h2>Prescriptions:-</h2>
         <div id="prescriptionsList"></div>
         <button id="backButton">back</button>
@@ -69,31 +69,35 @@
         </div>
         <button id="backButton">back</button>
     </div>
-    <div id="prescriptionBox" style=" border: 1px solid grey; padding: 1rem; width: max-content; display: none;">
+    <div id="prescriptionBox">
         <h2>Prescription:-</h2>
         <div id="prescriptionEditBox">
-            <input type="text" id="prescFor" placeholder="Disease">
-            <input type="text" id="height" placeholder="height">
-            <input type="text" id="weight" placeholder="weight">
+            <input type="text" id="prescFor" placeholder="Disease" class="inputBox">
+            <input type="number" id="height" placeholder="height(cm)" class="inputBox"> 
+            <input type="number" id="weight" placeholder="weight(kg)" class="inputBox" style="margin-right: 0px">
             <div id="medicinesBox">
-                <div id="med" style="border: 1px dotted black; padding: 0.5rem; margin-top: 1rem;">
+                <div id="med">
                     <h3>
-                        <div id="text"> Medicine </div>
+                        <div id="text"> Medicine: </div>
                     </h3>
-                    <input type="text" id="medName" placeholder="Medicine Name">
-                    <input type="text" id="medDuration" placeholder="No.of days to take">
-                    <input type="checkbox" id="day" value="day">
-                    <label>Day</label>
-                    <input type="checkbox" id="afternoon" value="afternoon">
-                    <label>Afternoon</label>
-                    <input type="checkbox" id="night" value="night">
-                    <label>Night</label>
-                    <button id="deleteMed" style="float: right; position: relative; bottom: 25px;">🗑️</button>
+                    <input type="text" id="medName" placeholder="Medicine Name" class="inputBox">
+                    <input type="text" id="medDuration" placeholder="No.of days to take" class="inputBox"><br>
+                    <div class="dailyDoseBox">
+                        <input type="checkbox" id="day" value="day">
+                        <label>Day</label>
+                        <input type="checkbox" id="afternoon" value="afternoon">
+                        <label>Afternoon</label>
+                        <input type="checkbox" id="night" value="night">
+                        <label>Night</label>
+                    </div>
+                    <div class="deleteContainer">
+                        <button id="deleteMed">Delete</button>
+                    </div>
                 </div>
             </div>
-            <button id="addMedButton">+</button>
+            <button id="addMedButton" class="statButton" style="margin-top: 1rem; background-color: #D1E9FF; color: #288DEB;">Add</button>
         </div>
-        <button id="submitPrescriptionButton">Submit Prescription</button>
+        <button id="submitPrescriptionButton" class="statButton" style="width: 100%; margin-top: 3rem;">Submit Prescription</button>
     </div>
     <!-- <button><a href="./doctorHome.html">Home</a></button> -->
 </body>

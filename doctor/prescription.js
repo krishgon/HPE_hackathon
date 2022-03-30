@@ -77,7 +77,7 @@ if (localStorage.getItem("uid") == null) {
         console.log("add button clicked");
         var medToAdd = med.cloneNode(true);
         medBox.appendChild(medToAdd);
-        var deleteButton = medToAdd.children[15];
+        var deleteButton = medToAdd.querySelector(".deleteContainer > button");
         deleteButton.addEventListener('click', () => {
             delteMedicine(deleteButton);
         });
@@ -129,7 +129,7 @@ async function getMedTable(record) {
 }
 
 function delteMedicine(deleteButton) {
-    deleteButton.parentElement.outerHTML = "";
+    deleteButton.parentElement.parentElement.outerHTML = "";
 }
 
 async function uploadPrescription() {

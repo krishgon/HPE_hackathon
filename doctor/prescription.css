@@ -16,14 +16,13 @@
 
 body {
     /* background-color: blue; */
-    background: linear-gradient(116.55deg, #2B99FF 0.39%, #2B97FC 8.88%, #288CEA 52.46%, #2580D6 100%);
+    background-color: var(--lightBlue);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 100vh;
+    /* height: 100vh; */
     width: 100vw;
-    overflow: hidden;
 }
 
 .logoBar {
@@ -76,17 +75,16 @@ tr:nth-child(even) {
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.25);
 }
 
-.inputBox {
-    color: var(--lightBlack);
+/* .inputBox {
     font-family: 'Playfair Display', serif;
     font-size: 1.3rem;
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
-}
+} */
 
-.inputBox input{
-    margin-top: 0.4rem;
+.inputBox{
+    margin-right: 1rem;
     padding: 0.5rem 1rem;
     border: 1px solid #C5C5C5;
     font-family: 'Dosis', serif;
@@ -111,4 +109,70 @@ tr:nth-child(even) {
 
 .formBox button:hover{
     background-color: #006bd0;
+}
+
+.statButton{
+    background-color:  #31cc6f;
+    padding: 12px 15px;
+    font: 'Dosis',sans-serif;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    margin: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.statButton:active{
+    transform: scale(0.95);
+}
+
+.patientPrescriptions{
+    font-family: 'Playfair Display',sans-serif;
+    font-weight: 400;
+}
+
+#prescriptionBox{
+    background-color: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.25);
+    margin-top: 3rem;
+}
+
+#prescriptionBox h2, h3{
+    font-family: 'Playfair Display', sans-serif;
+    margin-bottom: 0.5rem;
+    font-weight: 100;
+}
+
+#med {
+    background-color: var(--darkWhite);
+    border: 1px solid #c4c4c4;
+    padding: 1rem; 
+    margin-top: 2rem;
+}
+
+.dailyDoseBox {
+    margin-top: 1rem;
+}
+
+.dailyDoseBox label {
+    font-family: 'Dosis', serif;
+    margin-right: 1rem;
+}
+
+.deleteContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+#deleteMed {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #ff8a8a;
+    color: black;
+    font-family: 'Roboto Slab', serif;
 }
