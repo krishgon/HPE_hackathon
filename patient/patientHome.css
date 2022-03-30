@@ -197,8 +197,6 @@ li > a > img{
     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.25);
 }
 
-
-
 .prescription-conditions{
     display: flex;
 
@@ -226,7 +224,7 @@ li > a > img{
     color: black;
     font-family: 'Dosis', sans-serif;
     font-weight: 700;
-    background-color: var(--blue);
+    background-color: #5aa2e6;
 }
 
 .current-medications th{
@@ -237,4 +235,109 @@ li > a > img{
     font-family: 'Playfair Display', sans-serif;
     text-align: center;
     font-size: 32px;
+}
+
+/*Records*/
+.record-type{
+    display: flex;
+    flex-direction: column;
+    width: 700px;
+    max-width: 95%;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 40px auto;
+    background-color: white;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.25);
+}
+
+.record-name{
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    text-align: center;
+    font-size: 28px;
+}
+
+.record-table{
+    margin: 10px 20px;
+}
+
+.record-table, .record-table th, .record-table td{
+    padding: 10px;
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.record-table th{
+    color: black;
+    font-family: 'Dosis', sans-serif;
+    font-weight: 700;
+    background-color: #5aa2e6;
+}
+
+.record-table button{
+    padding: 8px 10px;
+    background-color: #31cc6f;
+    color: white;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+/*Edit Profile*/
+.edit-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 700px;
+    max-width: 95%;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 40px auto;
+    background-color: white;
+    box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.25);
+}
+
+.edit-input{
+    display: flex;
+    flex-direction: column;
+}
+
+.edit-input label{
+    font-family: 'PLayfair Display', serif;
+    font-size: 20px;
+    margin: 6px;
+}
+
+.edit-input input{
+    background-color: white;
+    border: 1px solid #333;
+    border-radius: 5px;
+    width: 200px;
+    max-width: 95%;
+	padding: 8px 16px;
+	margin: 6px 0;
+}
+
+.edit-input input:active, .edit-input input:focus{
+    border: 1px solid var(--blue);
+    outline: none;
+}
+
+.edit-submit{
+    width: 200px;
+    max-width: 95%;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background-color: #31cc6f;
+    color: white;
+    font-size: 16px;
+    padding: 12px 12px;
+    margin: 20px auto;
+    cursor: pointer;
+}
+
+.edit-submit:active{
+    transform: scale(0.95);
 }

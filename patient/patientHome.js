@@ -45,18 +45,6 @@ let dashboardNav = document.getElementById('dashboard-nav');
 let prescriptionNav = document.getElementById('prescription-nav');
 let recordsNav = document.getElementById('records-nav');
 
-dashboardNav.addEventListener('click', async () => {
-    dataContainer.innerHTML = '<div id="userProfile"> <div class="user-details"> <div class="user-image"><img src="./assets/patientIcon.svg" alt="patient icon"></div> <div class="user-info"> <div class="user-name-age"> <div class="user-name">Krish Agrawal</div> <div class="user-age">Age : 16 years</div> </div> <div class="user-basic-details"> <div ><img src="./assets/heightIcon.svg" alt="height icon">162cm</div> <div ><img src="./assets/weightIcon.svg" alt="weight icon">52kg</div> <div ><img src="./../doctor/Assets/emailIcon.svg" alt="email icon">anshuman64@gmail.com</div> </div> </div> </div> <div id="charts"> <canvas id="heightChart" ></canvas> <canvas id="weightChart" ></canvas> </div> </div>'
-    // await makeChart();
-})
-
-prescriptionNav.addEventListener('click', () => {
-    dataContainer.innerHTML = 'haha';
-})
-
-recordsNav.addEventListener('click', () => {
-    dataContainer.innerHTML = 'gaga';
-})
 
 
 
@@ -66,19 +54,31 @@ if (localStorage.getItem("uid") == null) {
 } else {
     userID = localStorage.getItem("uid");
 
-    const prescriptionsSnapshot = await getDocs(collection(db, "patients", userID, "prescriptions"));
-    prescriptionsSnapshot.forEach(async (prescription) => {
-        var list = document.getElementById("pastPrescriptions");
-        var item = document.createElement("div");
-        item.classList.add('prescription-item');
-        item.style.border = "1px solid grey";
-        item.innerHTML = `<div class="prescription-conditions"><div class="disease-name">Disease: ${prescription.data().prescFor}</div><div class="doctor-name">Doctor: ${prescription.data().doctor}</div></div>`;
-        var medTable = await getMedTable(prescription);
-        item.appendChild(medTable);
-        list.appendChild(item);
+    
+    dashboardNav.addEventListener('click', async () => {
+
+        dataContainer.innerHTML = '<div id="userProfile"> <div class="user-details"> <div class="user-image"><img src="./assets/patientIcon.svg" alt="patient icon"></div> <div class="user-info"> <div class="user-name-age"> <div class="user-name">Krish Agrawal</div> <div class="user-age">Age : 16 years</div> </div> <div class="user-basic-details"> <div ><img src="./assets/heightIcon.svg" alt="height icon">162cm</div> <div ><img src="./assets/weightIcon.svg" alt="weight icon">52kg</div> <div ><img src="./../doctor/Assets/emailIcon.svg" alt="email icon">anshuman64@gmail.com</div> </div> </div> </div> <div id="charts"> <canvas id="heightChart" ></canvas> <canvas id="weightChart" ></canvas> </div> </div>'
+        //await makeChart();
+        document.querySelector('.active').classList.remove('active');
+        document.querySelector('#dashboard-nav-anchor').classList.add('active');
+    })
+    
+    prescriptionNav.addEventListener('click',async () => {
+        dataContainer.innerHTML = '<div id="currentMedicatations"> <h1 class="prescriptionTitle">Current Medications:- </h1> </div> <div id="pastPrescriptions"> <h1 class="prescriptionTitle">Past Prescriptions:- </h1> </div>';
+        
+        await showCurrentMeds();
+        await showPastMeds();
+
+        document.querySelector('.active').classList.remove('active');
+        document.querySelector('#prescription-nav-anchor').classList.add('active');
+    
     });
 
-
+    recordsNav.addEventListener('click', () => {
+        dataContainer.innerHTML = 'gaga';
+        document.querySelector('.active').classList.remove('active');
+        document.querySelector('#records-nav-anchor').classList.add('active');
+    })
 
 
     // when logout button is clicked, remove the uid from storage and take user to sign in page
@@ -100,7 +100,6 @@ if (localStorage.getItem("uid") == null) {
     //     }
     // }
 
-    await showCurrentMeds();
 
 
     // open the edit interface when edit button is clicked
@@ -109,20 +108,34 @@ if (localStorage.getItem("uid") == null) {
         document.getElementById("profileEdit").style.display = "block";
     });
 
-    // send the edits to server
-    document.getElementById("submitEditsButton").addEventListener('click', async () => {
+    // // send the edits to server
+    // document.getElementById("submitEditsButton").addEventListener('click', async () => {
 
-        var patientRef = doc(db, 'patients', userID);
-        await setDoc(patientRef, {
-            name: document.getElementById('nameEdit').value,
-            height: document.getElementById('heightEdit').value,
-            weight: document.getElementById('weightEdit').value
-        }, { merge: true });
+    //     var patientRef = doc(db, 'patients', userID);
+    //     await setDoc(patientRef, {
+    //         name: document.getElementById('nameEdit').value,
+    //         height: document.getElementById('heightEdit').value,
+    //         weight: document.getElementById('weightEdit').value
+    //     }, { merge: true });
 
-        location.reload();
-    });
+    //     location.reload();
+    // });
 }
 
+
+async function showPastMeds(){
+    const prescriptionsSnapshot = await getDocs(collection(db, "patients", userID, "prescriptions"));
+    prescriptionsSnapshot.forEach(async (prescription) => {
+        var list = document.getElementById("pastPrescriptions");
+        var item = document.createElement("div");
+        item.classList.add('prescription-item');
+        item.style.border = "1px solid grey";
+        item.innerHTML = `<div class="prescription-conditions"><div class="disease-name">Disease: ${prescription.data().prescFor}</div><div class="doctor-name">Doctor: ${prescription.data().doctor}</div></div>`;
+        var medTable = await getMedTable(prescription);
+        item.appendChild(medTable);
+        list.appendChild(item);
+    });
+}
 
 async function showCurrentMeds() {
     var list = document.getElementById("currentMedicatations");

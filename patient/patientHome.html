@@ -28,22 +28,119 @@
 
     <!--Side Navbar-->
     <ul class="sideNav">
-        <li id="dashboard-nav"><a class="active"><img src="./assets/dashboard_black_36dp.svg" alt="dashboard icon"> Dashboard</a></li>
+        <li id="dashboard-nav"><a id="dashboard-nav-anchor" class="active"><img src="./assets/dashboard_black_36dp.svg" alt="dashboard icon"> Dashboard</a></li>
         <hr>
-        <li id="prescription-nav"><a ><img src="./../prescriptionIcon.svg" alt="prescriptions icon" style="filter: brightness(0) saturate(100%);"> Prescriptions</a></li>
+        <li id="prescription-nav"><a id="prescription-nav-anchor"><img src="./../prescriptionIcon.svg" alt="prescriptions icon" style="filter: brightness(0) saturate(100%);"> Prescriptions</a></li>
         <hr>
-        <li id="records-nav"><a ><img src="./assets/folder_black_36dp.svg" alt="records folder icon"> Records</a></li>
+        <li id="records-nav"><a id="records-nav-anchor"><img src="./assets/folder_black_36dp.svg" alt="records folder icon"> Records</a></li>
         <hr>
         <li><a href="https://www.google.com/" target="_blank"><img src="./assets/info_black_36dp.svg" alt="information icon"> How to use</a></li>
     </ul>
 
     <div class="dataContainer" id="data-container">
-        <div id="currentMedicatations">
-            <h1 class="prescriptionTitle">Current Medications:- </h1>
+        <div class="records-container">
+            <div class="record-type">
+                <div class="record-name">Vaccinations</div>
+                <table class="record-table">
+                    <tr>
+                        <th>Sr.no</th>
+                        <th>Vaccine Name</th>
+                        <th>Date Given</th>
+                        <th>Age</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>BCG</td>
+                        <td>22/03/2008</td>
+                        <td>3 years</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>TB</td>
+                        <td>12/09/2010</td>
+                        <td>5 years</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Polio</td>
+                        <td>04/08/2013</td>
+                        <td>8 years</td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div id="pastPrescriptions">
-            <h1 class="prescriptionTitle">Past Prescriptions:- </h1>
+
+        <div class="records-container">
+            <div class="record-type">
+                <div class="record-name">Allergies</div>
+                <table class="record-table">
+                    <tr>
+                        <th>Sr.no</th>
+                        <th>Allergy Name</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Pollen</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Dust</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Sunlight</td>
+                    </tr>
+                </table>
+            </div>
         </div>
+
+        <div class="records-container">
+            <div class="record-type">
+                <div class="record-name">Reports</div>
+                <table class="record-table">
+                    <tr>
+                        <th>Sr.no</th>
+                        <th>Report Type</th>
+                        <th>Report File</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Blood Report</td>
+                        <td><button>Download File</button></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Gastrointestinal Report</td>
+                        <td><button>Download File</button></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Dermathology Report</td>
+                        <td><button>Download File</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+       <div class="edit-box">
+           <div class="edit-input">
+               <label for="name">Name:</label>
+               <input type="text" id="name" placeholder="Krish Agrawal">
+           </div>
+
+           <div class="edit-input">
+                <label for="height">Height:</label>
+                <input type="text" id="height" placeholder="in cm">
+            </div>
+
+            <div class="edit-input">
+                <label for="weight">Weight:</label>
+                <input type="text" id="weight" placeholder="in kg">
+            </div>
+
+            <button class="edit-submit">Submit</button>
+       </div>
+
     </div>
 
 </body>
