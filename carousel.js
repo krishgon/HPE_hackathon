@@ -1,26 +1,47 @@
-let contentArray=
-[
-    '<h2 class="instruction">What type of user do you want to sign up as?</h2>    <div class="choice-container">        <input type="radio" name="sUsertype" id="sPatient" class="user-type-input">        <label class="choice-box" for="sPatient">            <img src="patient-icon-3.png" alt="patient-icon">            Patient        </label>                <input type="radio" name="sUsertype" id="sDoctor" class="user-type-input">        <label class="choice-box" for="sDoctor">            <img src="doctor-icon.png" alt="doctor-icon">            Doctor        </label>    </div>',
-    '<h2 class="instruction">Please enter the following details</h2>    <div class="input-boxes">        <div class="extra-input">            <label for="sBirthdate">Date of Birth</label>            <input type="date" id="sBirthdate">        </div>        <div class="extra-input">            <label for="sHeight">Height</label>            <input type="number" id="sHeight" placeholder="in cm">        </div>        <div class="extra-input">            <label for="sWeight">Weight</label>            <input type="number" id="sWeight" placeholder="in kg">        </div>    </div>',
+// Importing the functions from the needed SDKs
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
+import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
 
-];
+function checkInputs(){
+    let inputs=document.getElementsByClassName('carousel-input');
+    let i=inputs.length;
+    let inputCounter=0;
+    for(let j=0; j<i; j++){
+        if(inputs[j].length == 0){
+            inputCounter++;
+        }
+    }
+    if(inputCounter == i){
+        return true;
+    }
+}
 
-let counter=0;
-let carouselBox=document.getElementById('carousel-box');
-nextButton=document.getElementById('nextButton');
-previousButton=document.getElementById('previousButton');
+let vaccBox = document.getElementById("vaccines");
+let allBox = document.getElementById("allergies");
+let repBox = document.getElementById("reports");
 
-nextButton.addEventListener('click',()=>{
-    if(counter<1){
-        counter++;
-        carouselBox.innerHTML=contentArray[counter];
-    }  
+
+document.getElementById("addVaccineButton").addEventListener('click', () => {
+    const vaccInput=document.createElement('div');
+    vaccInput.setAttribute('id','vaccineInput');
+    vaccInput.innerHTML='<div id="vaccineInput" style="border: 1px solid black; padding: 1rem;"> <input type="text" id="disease" placeholder="For what disease the vaccine was provided?"> <input type="date" id="dateGiven"> </div>';
+    vaccBox.appendChild(vaccInput);
+});
+
+document.getElementById('deleteVaccButton').addEventListener('click',()=>{
+    vaccBox.removeChild(vaccBox.lastChild);
 })
 
-previousButton.addEventListener('click',()=>{
-    if(counter>0){
-        counter--;
-        carouselBox.innerHTML=contentArray[counter];
-    }   
-})
 
+document.getElementById("addAllergyButton").addEventListener('click', () => {
+    const allergyInput=document.createElement('div');
+    allergyInput.setAttribute('id','allergyInput');
+    allergyInput.innerHTML='<div id="allergyInput" style="border: 1px solid black; padding: 1rem;"> <input type="text" id="sAllergy" placeholder="What allergy do you have"> </div>';
+    allBox.appendChild(allergyInput);
+});
+
+document.getElementById('deleteAllergyButton').addEventListener('click',()=>{
+    allBox.removeChild(allBox.lastChild);
+})

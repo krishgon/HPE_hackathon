@@ -2,7 +2,6 @@ body{
     overflow: hidden;
 }
 
-/*Patient or Doctor*/
 .carousel-container{
     height: 100vh;
     display: flex;
@@ -31,6 +30,7 @@ body{
     text-align: center;
 }
 
+/*Patient or Doctor*/
 .choice-container{
     display: flex;
     flex-direction: row;

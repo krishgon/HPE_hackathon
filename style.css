@@ -196,9 +196,3 @@ button.ghost {
 .container.right-panel-active .overlay-right {
 	transform: translateX(20%);
 }
-
-@media screen and (max-width:800px){
-    .form-container{
-        flex-direction: row;
-    }
-}

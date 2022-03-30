@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medfiles</title>
-    <script src="carousel.js" defer></script>
+    <script type="module" src="carousel.js" defer></script>
     <link rel="stylesheet" href="carousel.css">
     <link rel="icon" href="medfiles_logo.png">
 </head>
@@ -16,34 +16,92 @@
 <h1 class="carousel-title">Complete a few steps before we continue</h1>
 
 <div class="carousel-box" id="carousel-box">
-    <h2 class="instruction">Please submit your past vaccination records</h2>
+    <div class="carousel-slide">
+        <div class="text"> 
+            <h2 class="instruction">Please submit your allergies</h2> 
+            <p style="text-align: center;">To skip this step, remove all the inputs and continue</p> 
+        </div> 
 
-    <div class="multiple-input-container">
-        <div class="multiple-input-box">
-            <div class="multiple-input">
-                <label for="sVaccinationfile">Certificate</label>
-                <input type="file" id="sVaccinationfile">
-            </div>
-            <div class="multiple-input">
-                <label for="sVaccineDate">Date given</label>
-                <input type="date" id="sVaccineDate">
-            </div>
-            <div class="multiple-input">
-                <label for="sVaccineName">Vaccine Name</label>
-                <input type="text" id="sVaccineName">
+        <div id="allergies"> 
+            <div id="allergyInput" style="border: 1px solid black; padding: 1rem;"> 
+                <input type="text" id="sAllergy" placeholder="What allergy do you have"> 
             </div>
         </div>
-    </div>
     
-    <button id="input-adder">Add more</button>
+        <div class="input-controller">
+            <button id="addAllergyButton">+</button> 
+            <button id="deleteAllergyButton">-</button> 
+        </div>
+    </div>
+
+   <div class="carousel-slide" style="display: none;">
+        <h2 class="instruction">Please enter the following details</h2>
+            
+        <div class="input-boxes">        
+            <div class="extra-input">
+                <label for="sBirthdate">Date of Birth</label>
+                <input type="date" id="sBirthdate" class="carousel-input">
+            </div>  
+
+            <div class="extra-input">            
+                <label for="sHeight">Height</label>            
+                <input type="number" id="sHeight" placeholder="in cm" class="carousel-input">
+            </div>        
+
+            <div class="extra-input">            
+                <label for="sWeight">Weight</label>            
+                <input type="number" id="sWeight" placeholder="in kg" class="carousel-input">        
+            </div>    
+        </div>
+    </div>
+
+    <div class="carousel-slide" style="display: none;">
+    <div class="text"> 
+        <h2 class="instruction">Please submit your past vaccination records</h2> 
+        <p style="text-align: center;">To skip this step, remove all the inputs and continue</p> 
+    </div> 
+    <div id="vaccines"> 
+        <div id="vaccineInput" style="border: 1px solid black; padding: 1rem;"> 
+            <input type="text" id="disease" placeholder="For what disease the vaccine was provided?"> 
+            <input type="date" id="dateGiven">
+        </div>
+    </div>
+
+    <div class="input-controller">
+        <button id="addVaccineButton">+</button> 
+        <button id="deleteVaccButton">-</button> 
+    </div>
+
+    
+    
 </div>
 
-<div class="carousel-slider">
-<button id="previousButton">(</button>
-<button id="nextButton">)</button>
+<div class="carousel-control">
+    <div class="dot-container">
+        <div class="carousel-dots"></div>
+    </div>
+    <button id="carousel-continue">Continue</button>
+</div>
+
 </div>
 
 </div>
 </body>
 
 </html>
+<div class="text">
+    <h2 class="instruction">Please submit your allergies</h2>
+    <p style="text-align: center;">To skip this step, remove all the inputs and continue</p>
+</div>
+
+<div id='allergies'>
+    <div id='allergyInput' style="border: 1px solid black; padding: 1rem;">
+        <input type='text' id='allergy' placeholder='What allergy do you have'>
+    </div>
+</div>
+
+<div class="list-buttons">
+    <button id='addAllergyButton'>+</button>
+    <button id="deleteAllergyButton">-</button>
+</div>
+    
