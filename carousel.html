@@ -16,90 +16,105 @@
     <h1 class="carousel-title">Complete a few steps before we continue</h1>
 
     <div class="carousel-box" id="carousel-box">
-        <div class="carousel-slide">
-            <div class="text"> 
-                <h2 class="instruction">Please submit your pathological reports</h2> 
-                <p style="text-align: center;">To skip this step, remove all the inputs and continue</p> 
-            </div> 
-
-               <div id="reports"> 
-                <div id="reportInput" style="border: 1px solid black; padding: 1rem;"> 
-                    <input type='file' id='reportFiles' placeholder='What are you allergic from?'>
-				    <input type='text' placeholder='eg: blood report' id='reportType'>   
-                </div>
-            </div>
         
-            <div class="input-controller">
-                <button id="addReportButton">+</button> 
-                <button id="deleteReportButton">-</button> 
-            </div>
-        </div>
-
-        <div class="carousel-slide" style="display: none;">
-            <div class="text"> 
-                <h2 class="instruction">Please submit your allergies</h2> 
-                <p style="text-align: center;">To skip this step, remove all the inputs and continue</p> 
-            </div> 
-
-               <div id="allergies"> 
-                <div id="allergyInput" style="border: 1px solid black; padding: 1rem;"> 
-                    <input type="text" id="sAllergy" placeholder="What allergy do you have"> 
-                </div>
-            </div>
-        
-            <div class="input-controller">
-                <button id="addAllergyButton">+</button> 
-                <button id="deleteAllergyButton">-</button> 
-            </div>
-        </div>
-
-        <div class="carousel-slide" style="display: none;">
+        <div class="carousel-slide current-slide" >
              <h2 class="instruction">Please enter the following details</h2>
 
              <div class="input-boxes">        
                  <div class="extra-input">
-                     <label for="sBirthdate">Date of Birth</label>
+                     <label for="sBirthdate">Date of Birth:</label>
                      <input type="date" id="sBirthdate" class="carousel-input">
                  </div>  
              
                  <div class="extra-input">            
-                     <label for="sHeight">Height</label>            
+                     <label for="sHeight">Height:</label>            
                      <input type="number" id="sHeight" placeholder="in cm" class="carousel-input">
                  </div>        
              
                  <div class="extra-input">            
-                     <label for="sWeight">Weight</label>            
+                     <label for="sWeight">Weight:</label>            
                      <input type="number" id="sWeight" placeholder="in kg" class="carousel-input">        
                  </div>    
              </div>
          </div>
 
-        <div class="carousel-slide" style="display: none;">
+        <div class="carousel-slide" >
             <div class="text"> 
                 <h2 class="instruction">Please submit your past vaccination records</h2> 
-                <p style="text-align: center;">To skip this step, remove all the inputs and continue</p> 
+                <p class="instruction-subtitle">To skip this step, remove all the inputs and continue</p> 
             </div> 
 
             <div id="vaccines"> 
-                <div id="vaccineInput" style="border: 1px solid black; padding: 1rem;"> 
-                    <input type="text" id="disease" placeholder="For what disease the vaccine was provided?"> 
-                    <input type="date" id="dateGiven">
+                <div id="vaccineInput"> 
+                    <div class="extra-input">
+                        <label for="disease">Vaccine:</label>
+                        <input type="text" id="disease" placeholder="Vaccine Name" class="carousel-input">
+                    </div>
+
+                    <div class="extra-input">
+                        <label for="dateGiven">Date Given:</label>
+                        <input type="date" id="dateGiven" class="carousel-input" placeholder="Date Given">
+                    </div>
                 </div>
             </div>
 
             <div class="input-controller">
-                <button id="addVaccineButton">+</button> 
-                <button id="deleteVaccButton">-</button> 
+                <button id="addVaccineButton" class="input-button">+</button> 
+                <button id="deleteVaccButton" class="input-button">-</button> 
+            </div>
+        </div>
+
+        <div class="carousel-slide" >
+            <div class="text"> 
+                <h2 class="instruction">Please submit your allergies</h2> 
+                <p class="instruction-subtitle">To skip this step, remove all the inputs and continue</p> 
+            </div> 
+
+            <div id="allergies"> 
+                <div id="allergyInput">
+                    <div class="extra-input">
+                        <label for="sAllergy">Allergy Name:</label>
+                        <input type="text" id="sAllergy" placeholder="What allergy do you have" class="carousel-input"> 
+                    </div>
+                </div>         
+            </div>
+        
+            <div class="input-controller">
+                <button id="addAllergyButton" class="input-button">+</button> 
+                <button id="deleteAllergyButton" class="input-button">-</button> 
+            </div>
+        </div>
+
+        <div class="carousel-slide">
+            <div class="text"> 
+                <h2 class="instruction">Please submit your pathological reports</h2> 
+                <p class="instruction-subtitle">To skip this step, remove all the inputs and continue</p> 
+            </div> 
+
+            <div id="reports"> 
+                <div id="reportInput"> 
+                    <div class="extra-input">
+                        <label for="reportFiles"></label>
+                        <input type="file" id="reportFiles" placeholder="What are you allergic from?"" class="carousel-input">
+                    </div>
+
+                    <div class="extra-input">
+                        <label for="reportType"></label>
+                        <input type="text" placeholder="eg: blood report" id="reportType" class="carousel-input">   
+                    </div>
+                </div>
+            </div>
+        
+            <div class="input-controller">
+                <button id="addReportButton" class="input-button">+</button> 
+                <button id="deleteReportButton" class="input-button">-</button> 
             </div>
         </div>
 </div>
 
-<div class="carousel-control">
-    <div class="dot-container">
-        <div class="carousel-dots"></div>
-    </div>
-    <button id="carousel-continue">Continue</button>
-</div>
+
+<button id="carousel-continue">Continue</button>
+
 
 </body>
 

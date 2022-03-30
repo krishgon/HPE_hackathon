@@ -4,19 +4,36 @@ import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, w
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
 import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
 
-function checkInputs(){
-    let inputs=document.getElementsByClassName('carousel-input');
-    let i=inputs.length;
-    let inputCounter=0;
-    for(let j=0; j<i; j++){
-        if(inputs[j].length == 0){
-            inputCounter++;
+let slideCounter=0;
+let carouselSlides=document.getElementsByClassName('carousel-slide');
+let continueButton=document.getElementById('carousel-continue');
+
+continueButton.addEventListener('click',()=>{
+    if(slideCounter<3){
+        let inputs=carouselSlides[slideCounter].getElementsByClassName('carousel-input');
+        let i=inputs.length;
+        for(let j=0;j<i;j++){
+            if(inputs[j].value.length==0){
+                alert('Fill all the fields');
+                return;
+            }
         }
+        carouselSlides[slideCounter].classList.remove('current-slide')
+        slideCounter++;
+        carouselSlides[slideCounter].classList.add('current-slide')
     }
-    if(inputCounter == i){
-        return true;
+    else{
+        let inputs=carouselSlides[slideCounter].getElementsByClassName('carousel-input');
+        let i=inputs.length;
+        for(let j=0;j<i;j++){
+            if(inputs[j].value.length==0){
+                alert('Fill all the fields');
+                return;
+            }
+        }
+        alert('Your profile is created!')
     }
-}
+})
 
 let vaccBox = document.getElementById("vaccines");
 let allBox = document.getElementById("allergies");
@@ -25,8 +42,7 @@ let repBox = document.getElementById("reports");
 
 document.getElementById("addVaccineButton").addEventListener('click', () => {
     const vaccInput=document.createElement('div');
-    vaccInput.setAttribute('id','vaccineInput');
-    vaccInput.innerHTML='<div id="vaccineInput" style="border: 1px solid black; padding: 1rem;"> <input type="text" id="disease" placeholder="For what disease the vaccine was provided?"> <input type="date" id="dateGiven"> </div>';
+    vaccInput.innerHTML='<div id="vaccineInput"> <div class="extra-input"> <label for="disease">Vaccine:</label> <input type="text" id="disease" placeholder="Vaccine Name" class="carousel-input"> </div> <div class="extra-input"> <label for="dateGiven">Date Given:</label> <input type="date" id="dateGiven" class="carousel-input" placeholder="Date Given"> </div> </div>';
     vaccBox.appendChild(vaccInput);
 });
 
@@ -37,8 +53,7 @@ document.getElementById('deleteVaccButton').addEventListener('click',()=>{
 
 document.getElementById("addAllergyButton").addEventListener('click', () => {
     const allergyInput=document.createElement('div');
-    allergyInput.setAttribute('id','allergyInput');
-    allergyInput.innerHTML='<div id="allergyInput" style="border: 1px solid black; padding: 1rem;"> <input type="text" id="sAllergy" placeholder="What allergy do you have"> </div>';
+    allergyInput.innerHTML='<div id="allergyInput"> <div class="extra-input"> <label for="sAllergy">Allergy Name:</label> <input type="text" id="sAllergy" placeholder="What allergy do you have" class="carousel-input"> </div> </div>';
     allBox.appendChild(allergyInput);
 });
 
@@ -49,12 +64,11 @@ document.getElementById('deleteAllergyButton').addEventListener('click',()=>{
 
 
 document.getElementById("addReportButton").addEventListener('click', () => {
-    const vaccInput=document.createElement('div');
-    vaccInput.setAttribute('id','vaccineInput');
-    vaccInput.innerHTML='<div id="vaccineInput" style="border: 1px solid black; padding: 1rem;"> <input type="text" id="disease" placeholder="For what disease the vaccine was provided?"> <input type="date" id="dateGiven"> </div>';
-    vaccBox.appendChild(vaccInput);
+    const reportInput=document.createElement('div');
+    reportInput.innerHTML='<div id="reportInput"> <div class="extra-input"> <label for="reportFiles"></label> <input type="file" id="reportFiles" placeholder="What are you allergic from?"" class="carousel-input"> </div> <div class="extra-input"> <label for="reportType"></label> <input type="text" placeholder="eg: blood report" id="reportType" class="carousel-input"> </div> </div>';
+    repBox.appendChild(reportInput);
 });
 
 document.getElementById('deleteReportButton').addEventListener('click',()=>{
-    vaccBox.removeChild(vaccBox.lastChild);
+    repBox.removeChild(repBox.lastChild);
 })
