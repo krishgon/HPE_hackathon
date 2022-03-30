@@ -32,13 +32,15 @@ const monthsToShow = [
 /*Styling*/
 let patientProfile=document.getElementById('patient-profile');
 let profileAccordion=document.getElementById('profile-accordion');
-console.log(profileAccordion)
 patientProfile.addEventListener('click',()=>{
     profileAccordion.classList.toggle('invisible');
 })
 
 
-// If the user has not signed in, take him/her to signin page else proceed
+var userID = localStorage.getItem('uid');
+await makeChart();
+
+/* If the user has not signed in, take him/her to signin page else proceed
 if (localStorage.getItem("uid") == null) {
     window.location.replace("./../index.html");
 } else {
@@ -84,7 +86,6 @@ if (localStorage.getItem("uid") == null) {
         location.reload();
     });
 
-    await makeChart();
 }
 
 async function showCurrentMeds() {
@@ -105,7 +106,7 @@ async function showCurrentMeds() {
             }
         });
     });
-}
+}*/
 
 async function makeChartData() {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -189,7 +190,7 @@ function drawWeightChart(weights){
 }
 
 
-
+/*
 function calcDaysDiff(fromDate) {
     var currDate = new Date();
 
@@ -199,5 +200,5 @@ function calcDaysDiff(fromDate) {
     // To calculate the no. of days between two dates
     var difference = Difference_In_Time / (1000 * 3600 * 24);
     return difference;
-}
+}*/
 
