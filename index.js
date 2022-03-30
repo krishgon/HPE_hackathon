@@ -56,15 +56,9 @@ if (localStorage.getItem("uid") != null) {
         userDetails.set('email', document.getElementById('sMail').value);
         userDetails.set('password', document.getElementById('sPass').value);
         userDetails.set('name', document.getElementById('sName').value);
+        userDetails.set('userType', document.getElementById("sUsertype").value);
 
-        // move ahead and ask the user if he/she is a doctor or a patient by changing body's html
-        document.getElementById("container").style.display = "none";
-        document.getElementById("userTypeBox").style.display = "block";
-
-        //if patient
-        document.getElementById("patient").addEventListener('click', () => { signUpUser('patient'); });
-        //if doctor
-        document.getElementById("doctor").addEventListener('click', () => { signUpUser('doctor'); });
+        signUpUser(userDetails.get('userType'));
     });
 
     // when the login button will be clicked
@@ -191,6 +185,7 @@ function signUpUser(userStatus) {
             // after registering
             user = userCredential.user;
             collec = userStatus + "s";
+            localStorage.setItem("userCollection", collec);
 
             // create a document of user in the respective collection including user's basic details 
             userDocRef = doc(db, collec, user.uid);
@@ -200,17 +195,7 @@ function signUpUser(userStatus) {
             });
 
             localStorage.setItem("uid", user.uid);
-
-            // when the user is succesfully signed up, show him/her that profile is created and prompt a continue button
-            document.getElementById("userTypeBox").style.display = "none";
-            document.getElementById("successfullyCreated").style.display = "block";
-            document.getElementById("contButton").addEventListener('click', () => {
-                if (userStatus == 'patient') {
-                    makePatientProfile();
-                } else {
-                    makeDoctorProfile();
-                }
-            });
+            window.location.replace("./carousel.html");
         })
         .catch((error) => {
             // if there's some error in details or any other thing, alert about it to the user
