@@ -4,71 +4,123 @@ import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, w
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-auth.js";
 import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
 
-let slideCounter=0;
-let carouselSlides=document.getElementsByClassName('carousel-slide');
-let continueButton=document.getElementById('carousel-continue');
+// Web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyBU1aZZEBtPTnO0isvYeaSlQG8Bx2GqVu8",
+    authDomain: "hackathon-9afac.firebaseapp.com",
+    projectId: "hackathon-9afac",
+    storageBucket: "gs://hackathon-9afac.appspot.com/",
+    messagingSenderId: "105717120536",
+    appId: "1:105717120536:web:08b29491ad511ce2048d6d"
+};
 
-continueButton.addEventListener('click',()=>{
-    if(slideCounter<3){
-        let inputs=carouselSlides[slideCounter].getElementsByClassName('carousel-input');
-        let i=inputs.length;
-        for(let j=0;j<i;j++){
-            if(inputs[j].value.length==0){
-                alert('Fill all the fields');
-                return;
+
+// Initialize Firebase and other features
+const app = initializeApp(firebaseConfig);
+const db = getFirestore();
+const auth = getAuth();
+
+if (localStorage.getItem("uid") != null) {
+    sendToRespectivePage(localStorage.getItem("uid"));
+} else {
+    let slideCounter = 0;
+    let carouselSlides = document.getElementsByClassName('carousel-slide');
+    let continueButton = document.getElementById('carousel-continue');
+    var userID = localStorage.getItem("uid");
+
+    continueButton.addEventListener('click', () => {
+        if (slideCounter < 3) {
+            switch (slideCounter) {
+                case 0:
+                    console.log("basic details");
+                    uploadBasicDetails();
+                    break;
+                case 1:
+                    console.log("vaccinations details");
+                    uploadBasicDetails();
+                    break;
+                case 2:
+                    console.log("allergies details");
+                    break; 
             }
-        }
-        carouselSlides[slideCounter].classList.remove('current-slide')
-        slideCounter++;
-        carouselSlides[slideCounter].classList.add('current-slide')
-    }
-    else{
-        let inputs=carouselSlides[slideCounter].getElementsByClassName('carousel-input');
-        let i=inputs.length;
-        for(let j=0;j<i;j++){
-            if(inputs[j].value.length==0){
-                alert('Fill all the fields');
-                return;
+
+            let inputs = carouselSlides[slideCounter].getElementsByClassName('carousel-input');
+            let i = inputs.length;
+            for (let j = 0; j < i; j++) {
+                console.log(inputs[j].id);
+                if (inputs[j].value.length == 0) {
+                    alert('Fill all the fields');
+                    return;
+                }
             }
+            carouselSlides[slideCounter].classList.remove('current-slide')
+            slideCounter++;
+            carouselSlides[slideCounter].classList.add('current-slide')
         }
-        alert('Your profile is created!')
-    }
-})
+        else {
+            let inputs = carouselSlides[slideCounter].getElementsByClassName('carousel-input');
+            let i = inputs.length;
+            for (let j = 0; j < i; j++) {
+                if (inputs[j].value.length == 0) {
+                    alert('Fill all the fields');
+                    return;
+                }
+            }
+            alert('Your profile is created!')
+        }
+    })
 
-let vaccBox = document.getElementById("vaccines");
-let allBox = document.getElementById("allergies");
-let repBox = document.getElementById("reports");
-
-
-document.getElementById("addVaccineButton").addEventListener('click', () => {
-    const vaccInput=document.createElement('div');
-    vaccInput.innerHTML='<div id="vaccineInput"> <div class="extra-input"> <label for="disease">Vaccine:</label> <input type="text" id="disease" placeholder="Vaccine Name" class="carousel-input"> </div> <div class="extra-input"> <label for="dateGiven">Date Given:</label> <input type="date" id="dateGiven" class="carousel-input" placeholder="Date Given"> </div> </div>';
-    vaccBox.appendChild(vaccInput);
-});
-
-document.getElementById('deleteVaccButton').addEventListener('click',()=>{
-    vaccBox.removeChild(vaccBox.lastChild);
-})
+    let vaccBox = document.getElementById("vaccines");
+    let allBox = document.getElementById("allergies");
+    let repBox = document.getElementById("reports");
 
 
-document.getElementById("addAllergyButton").addEventListener('click', () => {
-    const allergyInput=document.createElement('div');
-    allergyInput.innerHTML='<div id="allergyInput"> <div class="extra-input"> <label for="sAllergy">Allergy Name:</label> <input type="text" id="sAllergy" placeholder="What allergy do you have" class="carousel-input"> </div> </div>';
-    allBox.appendChild(allergyInput);
-});
+    document.getElementById("addVaccineButton").addEventListener('click', () => {
+        const vaccInput = document.createElement('div');
+        vaccInput.innerHTML = '<div id="vaccineInput"> <div class="extra-input"> <label for="disease">Vaccine:</label> <input type="text" id="disease" placeholder="Vaccine Name" class="carousel-input"> </div> <div class="extra-input"> <label for="dateGiven">Date Given:</label> <input type="date" id="dateGiven" class="carousel-input" placeholder="Date Given"> </div> </div>';
+        vaccBox.appendChild(vaccInput);
+    });
 
-document.getElementById('deleteAllergyButton').addEventListener('click',()=>{
-    allBox.removeChild(allBox.lastChild);
-})
+    document.getElementById('deleteVaccButton').addEventListener('click', () => {
+        vaccBox.removeChild(vaccBox.lastChild);
+    })
+
+
+    document.getElementById("addAllergyButton").addEventListener('click', () => {
+        const allergyInput = document.createElement('div');
+        allergyInput.innerHTML = '<div id="allergyInput"> <div class="extra-input"> <label for="allergyFrom">Allergy Name:</label> <input type="text" id="allergyFrom" placeholder="What allergy do you have" class="carousel-input"> </div> </div>';
+        allBox.appendChild(allergyInput);
+    });
+
+    document.getElementById('deleteAllergyButton').addEventListener('click', () => {
+        allBox.removeChild(allBox.lastChild);
+    })
 
 
 
-document.getElementById("addReportButton").addEventListener('click', () => {
-    const reportInput=document.createElement('div');
-    reportInput.innerHTML='<div id="reportInput"> <div class="extra-input"> <label for="reportFiles"></label> <input type="file" id="reportFiles" placeholder="What are you allergic from?"" class="carousel-input"> </div> <div class="extra-input"> <label for="reportType"></label> <input type="text" placeholder="eg: blood report" id="reportType" class="carousel-input"> </div> </div>';
-    repBox.appendChild(reportInput);
-});
+    document.getElementById("addReportButton").addEventListener('click', () => {
+        const reportInput = document.createElement('div');
+        reportInput.innerHTML = '<div id="reportInput"> <div class="extra-input"> <label for="reportFiles"></label> <input type="file" id="reportFiles" placeholder="What are you allergic from?"" class="carousel-input"> </div> <div class="extra-input"> <label for="reportType"></label> <input type="text" placeholder="eg: blood report" id="reportType" class="carousel-input"> </div> </div>';
+        repBox.appendChild(reportInput);
+    });
 
-document.getElementById('deleteReportButton').addEventListener('click',()=>{
-    repBox.removeChild(repBox.lastChild);
-})
+    document.getElementById('deleteReportButton').addEventListener('click', () => {
+        repBox.removeChild(repBox.lastChild);
+    });
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
