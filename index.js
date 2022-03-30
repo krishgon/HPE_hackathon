@@ -34,8 +34,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
-<<<<<<< HEAD
-=======
 var userDetails, user, userDocRef, collec;
 var vaccToAdd = document.getElementById('vaccineInput').cloneNode(true);
 var vaccBox = document.getElementById("vaccines");
@@ -45,7 +43,6 @@ var repToAdd = document.getElementById("reportInput").cloneNode(true);
 var repBox = document.getElementById("reports");
 var dob;
 
->>>>>>> 3853252be3ad13e5e6ef8cfab76228dcc439d8a0
 
 if (localStorage.getItem("uid") != null) {
     sendToRespectivePage(localStorage.getItem("uid"));

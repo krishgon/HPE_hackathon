@@ -15,7 +15,6 @@
 	font-family: 'Montserrat', sans-serif;
 	height: 100vh;
 	overflow: hidden;
-
 }
 
 .form-heading {
@@ -197,11 +196,8 @@ button.ghost {
 	transform: translateX(20%);
 }
 
-<<<<<<< HEAD
-=======
 @media screen and (max-width:800px){
     .form-container{
         flex-direction: row;
     }
 }
->>>>>>> 3853252be3ad13e5e6ef8cfab76228dcc439d8a0
