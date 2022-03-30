@@ -16,6 +16,24 @@
     <h1 class="carousel-title">Complete a few steps before we continue</h1>
 
     <div class="carousel-box" id="carousel-box">
+        <div class="carousel-slide">
+            <div class="text"> 
+                <h2 class="instruction">Please submit your pathological reports</h2> 
+                <p style="text-align: center;">To skip this step, remove all the inputs and continue</p> 
+            </div> 
+
+               <div id="reports"> 
+                <div id="reportInput" style="border: 1px solid black; padding: 1rem;"> 
+                    <input type='file' id='reportFiles' placeholder='What are you allergic from?'>
+				    <input type='text' placeholder='eg: dermatopatholgy report, gastrointestinal report' id='reportType'>   
+                </div>
+            </div>
+        
+            <div class="input-controller">
+                <button id="addReportButton">+</button> 
+                <button id="deleteReportButton">-</button> 
+            </div>
+        </div>
 
         <div class="carousel-slide">
             <div class="text"> 
