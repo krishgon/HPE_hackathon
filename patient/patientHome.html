@@ -6,37 +6,58 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="stylesheet" href="./patientHome.css">
 </head>
 
 <body>
-    <h1>Welcome to patient homepage</h1>
-    <div id="userProfile">
-        <h2 id="nameBox"></h2>
-        <h2 id="ageBox"></h2>
-        <h2 id="emailBox"></h2>
-        <h2 id="heightBox"></h2>
-        <h2 id="weightBox"></h2>
-        <h2>Running Medications:-</h2>
-        <ol id="currentMeds">
-        </ol>
-        <div id="charts" style="display: flex;">
-            <canvas id="heightChart" style="max-width:400px; max-height:400px"></canvas>
-            <canvas id="weightChart" style="max-width:400px; max-height:400px"></canvas>
+    <div class="logoBar">
+        <img src="./../logo2.svg" alt="med files logo">
+        <div id="patient-profile">
+            <img src="assets/patientIcon.svg" alt="patient icon">
+            Krish Agrawal
+            <div id="profile-accordion" class="invisible">
+                <div class="profile-option">Log Out</div>
+                <div class="profile-option">Edit Profile</div>
+            </div>
         </div>
     </div>
-    <div id="profileEdit" style="display: none;">
-        Name:
-        <input type="text" id="nameEdit">
-        Height:
-        <input type="text" id="heightEdit">
-        Weight:
-        <input type="text" id="weightEdit">
-        <button id="submitEditsButton">Submit</button>
+    <ul class="sideNav">
+        <li><a class="active" href="#"><img src="./assets/dashboard_black_36dp.svg" alt="dashboard icon"> Dashboard</a></li>
+        <hr>
+        <li><a href="./prescriptions.html"><img src="./../prescriptionIcon.svg" alt="prescriptions icon" style="filter: brightness(0) saturate(100%);"> Prescriptions</a></li>
+        <hr>
+        <li><a href="./patientRecords.html"><img src="./assets/folder_black_36dp.svg" alt="records folder icon"> Records</a></li>
+        <hr>
+        <li><a href="www.google.com"><img src="./assets/info_black_36dp.svg" alt="information icon"> How to use</a></li>
+    </ul>
+
+    <div class="dashboardContainer">
+        <div id="userProfile">
+            <h2 id="nameBox"></h2>
+            <h2 id="ageBox"></h2>
+            <h2 id="emailBox"></h2>
+            <h2 id="heightBox"></h2>
+            <h2 id="weightBox"></h2>
+      
+            <div id="charts" style="display: flex;">
+                <canvas id="heightChart" style="max-width:400px; max-height:400px"></canvas>
+                <canvas id="weightChart" style="max-width:400px; max-height:400px"></canvas>
+            </div>
+        </div>
+        <div id="profileEdit" style="display: none;">
+            Name:
+            <input type="text" id="nameEdit">
+            Height:
+            <input type="text" id="heightEdit">
+            Weight:
+            <input type="text" id="weightEdit">
+            <button id="submitEditsButton">Submit</button>
+        </div>
+        <button id="logoutButton">Logout</button>
+        <button id="editButton">Edit Profile</button><br><br>
+        <button><a href="./prescriptions.html">View Prescriptions</a></button>
+        <button><a href="./patientRecords.html">View Records</a></button>
     </div>
-    <button id="logoutButton">Logout</button>
-    <button id="editButton">Edit Profile</button><br><br>
-    <button><a href="./prescriptions.html">View Prescriptions</a></button>
-    <button><a href="./patientRecords.html">View Records</a></button>
 </body>
 <script type="module" src="./patientHome.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

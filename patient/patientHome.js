@@ -29,6 +29,15 @@ const monthsToShow = [
     'March',
 ];
 
+/*Styling*/
+let patientProfile=document.getElementById('patient-profile');
+let profileAccordion=document.getElementById('profile-accordion');
+console.log(profileAccordion)
+patientProfile.addEventListener('click',()=>{
+    profileAccordion.classList.toggle('invisible');
+})
+
+
 // If the user has not signed in, take him/her to signin page else proceed
 if (localStorage.getItem("uid") == null) {
     window.location.replace("./../index.html");

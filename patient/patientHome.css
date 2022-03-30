@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0%;
+    padding: 0%;
+}
+
+:root {
+    --darkWhite: #f6f6f6;
+    --lightBlack: #626262;
+    --red: #FF0000;
+    --blue: #288DEB;
+    --lightBlue: #D1E9FF;
+    --logoGreen: #17BBB0;
+}
+
+body {
+    background-color: var(--lightBlue);
+}
+
+.logoBar {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+    padding: 0.75rem 4rem;
+    z-index: 2;
+}
+
+/*Navigation*/
+.logoBar a{
+    text-decoration: none;
+    color: black;
+    font-family: 'Roboto Slab', serif;
+    font-size: 1rem;
+}
+
+.logoBar img {
+    height: 5vh;
+}
+
+#patient-profile{
+    display: flex;
+    align-items: center;
+    font-family: 'Dosis', serif;
+    font-size: 18px;
+    cursor: pointer;
+    position: relative;
+    padding: 10px;
+    user-select: none;
+}
+
+#patient-profile img{
+    margin: 0 10px;
+}
+
+#profile-accordion{
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    background-color: white;
+    text-align: center;
+}
+
+.invisible{
+    display: none;
+}
+
+.profile-option{
+    border: 0.5px solid #333;
+    padding: 5px;
+}
+
+.profile-option:hover{
+    background-color: #eee;
+}
+
+/*Dashboard*/
+.dashboardContainer {
+    margin-left: 20vw;
+    padding-left: 5vw;
+    padding-top: 15vh;
+    background-color: var(--lightBlue);
+}
+
+.sideNav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    padding-top: 15vh;
+    width: 20vw;
+    background-color: white;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+  }
+  
+  li a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #000;
+    padding: 1rem 1rem;
+    text-decoration: none;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+  
+  li a.active {
+    background-color: var(--blue);
+    color: black;
+  }
+  
+  li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+  }
+
+li > a > img{
+    height: 4vh;
+    margin-right: 1rem;
+}
+
+hr {
+    margin: 1rem 2rem;
+    color: var(--lightBlack);
+    background-color: var(--lightBlack);
+}
