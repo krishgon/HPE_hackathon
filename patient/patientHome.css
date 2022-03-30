@@ -19,6 +19,7 @@ body {
     background-color: var(--lightBlue);
 }
 
+/*Navigation*/
 .logoBar {
     position: fixed;
     top: 0;
@@ -32,7 +33,6 @@ body {
     z-index: 2;
 }
 
-/*Navigation*/
 .logoBar a{
     text-decoration: none;
     color: black;
@@ -51,7 +51,6 @@ body {
     font-size: 18px;
     cursor: pointer;
     position: relative;
-    padding: 10px;
     user-select: none;
 }
 
@@ -61,7 +60,7 @@ body {
 
 #profile-accordion{
     position: absolute;
-    top: 100%;
+    top: 120%;
     width: 100%;
     background-color: white;
     text-align: center;
@@ -183,4 +182,23 @@ li > a > img{
     width: 700px;
     max-width: 95%;
     margin: 50px;
+}
+
+/*Prescription*/
+.prescription-item{
+    border: 1px solid black;
+}
+
+.medicine-list, .medicine-list th, .medicine-list td{
+    padding: 10px;
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.medicine-list th{
+    color: black;
+    font-family: 'Dosis', sans-serif;
+    font-weight: 700;
+    background-color: var(--blue);
 }

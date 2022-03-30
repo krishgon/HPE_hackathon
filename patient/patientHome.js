@@ -36,9 +36,29 @@ patientProfile.addEventListener('click',()=>{
     profileAccordion.classList.toggle('invisible');
 })
 
-
 var userID = localStorage.getItem('uid');
 await makeChart();
+
+/*Navigation*/
+let dataContainer=document.getElementById('data-container');
+let dashboardNav=document.getElementById('dashboard-nav');
+let prescriptionNav=document.getElementById('prescription-nav');
+let recordsNav=document.getElementById('records-nav');
+
+dashboardNav.addEventListener('click',async ()=>{
+    dataContainer.innerHTML='<div id="userProfile"> <div class="user-details"> <div class="user-image"><img src="./assets/patientIcon.svg" alt="patient icon"></div> <div class="user-info"> <div class="user-name-age"> <div class="user-name">Krish Agrawal</div> <div class="user-age">Age : 16 years</div> </div> <div class="user-basic-details"> <div ><img src="./assets/heightIcon.svg" alt="height icon">162cm</div> <div ><img src="./assets/weightIcon.svg" alt="weight icon">52kg</div> <div ><img src="./../doctor/Assets/emailIcon.svg" alt="email icon">anshuman64@gmail.com</div> </div> </div> </div> <div id="charts"> <canvas id="heightChart" ></canvas> <canvas id="weightChart" ></canvas> </div> </div>'
+    await makeChart();
+})
+
+prescriptionNav.addEventListener('click',()=>{
+    dataContainer.innerHTML='haha';
+})
+
+recordsNav.addEventListener('click',()=>{
+    dataContainer.innerHTML='gaga';
+})
+
+
 
 /* If the user has not signed in, take him/her to signin page else proceed
 if (localStorage.getItem("uid") == null) {
